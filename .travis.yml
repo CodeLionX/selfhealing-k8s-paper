@@ -1,0 +1,40 @@
+language: generic
+
+# conditional build
+conditions: v1
+
+# build only the following:
+#   master branch
+#   btw branch
+#   branches starting with `ci-` or `ci/`
+#   commits with `[build pdf]` in the commit message
+if: branch == master || branch =~ ^(?i:ci)(-|\/).* || commit_message =~ /^.*\[build pdf\].*$/
+
+# install texlive for using pdflatex and biber in the build
+install:
+- source ./bin/install_texlive.sh
+
+# cache the texlive installation and all installed packages
+cache:
+  directories:
+  - "/tmp/texlive"
+  - "$HOME/.texlive"
+
+# run the PDF build-steps (pdflatex and biber) for
+# main file: paper.tex
+# output filename: Self-Healing.pdf
+script:
+- "./bin/build.sh paper Self-Healing.pdf"
+
+# use deployment to push back the resulting PDF into the corresponding branch
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: "./bin/travis-push.sh Self-Healing.pdf"
+  on:
+    all_branches: true
+
+# secure GH_TOKEN for Github API authentication
+env:
+  global:
+    secure: kIdH+582uP6pTPJ2rvfnfFMXpkaTV69aE1aRKCkSMT5oN/Nf0SOvM9QIfOtqTAVBTyRCy8XHY2boisM5qmbDbmPpIzgdfaWmaOxT9uvlPIc34Mm6X4eB+8cY5iTPttqT+b26OQ8xSSfttPM5dj8+sAV98pRxJsf72efl+kpAU6vNK/chkeoKOI3sMpnE16/whKCsEVX/41SUFRqAZbvxBzmx9tqW2msKoriGGpJXHnMUhfl/LnKUS/bNofuCD3EdORbXGe/xQrvRpfq8V6ffflwGlf1G67tc9vA0Pl5b41l+EBMznL3rJGmYejbbIF3i8aUxfNSpkM1uq5dWSoYHVmdHsszAQdEr4j0ox1XPKZEFLBkkES2hKClbgVQepzMfvmFY8BgLR+S9vg7jODUTvtceIobpO2zEZINy6VTeNBpHndfkidM42Z1/WGFYPSKiImVagc9SrcjD+3buBrIXIjFWRja5tnVoKfgAenwPr9ekUnUsSiZYPXbv1NGRH03bqhLJOc1jMcfCDFeWaV/ZCKAje6VbX4RW26uv5om7oWGSRDDj08Hjvd0atEE32I2OyFNwpAKfrJcDB+k5xUN4mijLrjVXYMWExDOLKaiVVdM8ozyEtbygR+cjwMW9VbEk9FtUuBJoAKFbGwipUQDSDj55fpcLknG8fJDoKQd22Pc=
