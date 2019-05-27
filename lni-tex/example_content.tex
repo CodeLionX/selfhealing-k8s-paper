@@ -1,0 +1,70 @@
+
+\section{Example}
+\label{sec:lniconformance}
+This example is from the original LNI documentation and therefore in German:
+
+Referenzen mit dem richtigen Namen (\textit{Table}, \textit{Figure}, ...):
+\Cref{sec:intro} zeigt Demonstrationen der Verbesserung von GitHub-LNI gegenüber der originalen Vorlage.
+\Cref{sec:lniconformance} zeigt die Einhaltung der Richtlinien durch einfachen Text.
+
+Referenzen sollten nicht direkt als Subjekt eingebunden werden, sondern immer nur durch Authorenanganben:
+Beispiel: \Citet{AB00} geben ein Beispiel, aber auch \citet{Az09}.
+Hinweis: Großes C bei \texttt{Citet}, wenn es am Satzanfang steht. Analog zu \texttt{Cref}.
+
+\Cref{fig:demo} zeigt eine Abbildung.
+
+\begin{figure}
+  \centering
+  Hier sollte die Graphik mittels \texttt{includegraphics} eingebunden werden.
+
+  %\includegraphics[width=.8\textwidth]{filename}
+  \caption{Demographik}
+  \label{fig:demo}
+\end{figure}
+
+\Cref{tab:demo} zeigt eine Tabelle.
+
+\begin{table}
+  \centering
+  \begin{tabular}{lll}
+    \toprule
+    Überschriftsebenen & Beispiel & Schriftgröße und -art \\
+    \midrule
+    Titel (linksbündig) & Der Titel \ldots & 14 pt, Fett\\
+    Überschrift 1 & 1 Einleitung & 12 pt, Fett\\
+    Überschrift 2 & 2.1 Titel & 10 pt, Fett\\
+    \bottomrule
+  \end{tabular}
+  \caption{Die Überschriftsarten}
+  \label{tab:demo}
+\end{table}
+               
+Die LNI-Formatvorlage verlangt die Einrückung von Listings vom linken Rand.
+\Cref{L1} zeigt uns ein Beispiel, das mit Hilfe der \texttt{lstlisting}-Umgebung realisiert ist.
+Referenz auf \code{print("Hello World!")} in \cref{lst:l2}.
+
+% activate the language and add caption/label
+% use `§` to add latex stuff, such as labels
+% math works inside of listings like in latex with `$`
+\begin{lstlisting}[caption=Beschreibung, label=L1, language=Scala]
+/**
+  * Hello World application!
+  */
+object Hello { 
+  def main(args: Seq[String]): Unit = {
+    println("Hello World!") §\label{lst:l2}§
+  }
+  def math: Unit = $\frac{\sqrt{1 - x^2}}{x_i + \lambda} - \infty$
+}
+\end{lstlisting}
+
+Die korrekte Einrückung und Nummerierung für Formeln ist bei den Umgebungen \texttt{equation} und \texttt{align} gewährleistet.
+
+\begin{equation}
+  1=4-3 + x
+\end{equation}
+und
+\begin{align}
+  2=7-5\\
+  3=2-1
+\end{align}

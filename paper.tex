@@ -1,0 +1,155 @@
+% Currently this document is written in English
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_US
+% !TeX program = pdflatex
+% !BIB program = biber
+
+%Ensure that all odl school LaTeX habits are remarked
+\RequirePackage[l2tabu, orthodox]{nag}
+
+%German: remove "english"
+\documentclass[english,utf8,biblatex,noeditorial]{lni-tex/lni}
+% Nice tables using \toprule, \midrule, \bottomrule
+\usepackage{booktabs}
+\usepackage{multirow}
+% custom enums (more compact)
+\usepackage{enumitem}
+\setlist{noitemsep,topsep=0pt,parsep=0pt,partopsep=0pt}
+% subfigures and subcaptions
+\usepackage{subcaption}
+
+%% Begin: Drawings
+% use standalone and tikz for high-fid. drawings
+
+% standalone package and config
+\usepackage{standalone} % For pre-compiled pictures
+\standaloneconfig{mode=buildnew} % only build image if source file is newer
+
+% tikz package and config
+\usepackage{tikz} % For Tikz pictures
+\usetikzlibrary{
+  positioning,
+  fit,
+  arrows,
+  calc,
+  backgrounds
+}
+
+% pgfplots
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16} % set pgfplots compatibility to version 1.16
+%% End: Drawings
+
+%% Begin: Biblatex
+
+%for easy quotations: \enquote{text}, also required by biblatex
+\usepackage{csquotes}
+% biblatex is included with LNI-class option: `biblatex`, only set bibliography-file:
+\bibliography{paper}
+
+% Clear fields we do not need
+\iffalse
+\AtEveryBibitem{%
+  \ifentrytype{article}{%
+  }{%
+    \clearfield{doi}%
+    \clearfield{issn}%
+    \clearfield{url}%
+    \clearfield{urldate}%
+  }%
+  \ifentrytype{inproceedings}{%
+  }{%
+    \clearfield{doi}%
+    \clearfield{issn}%
+    \clearfield{url}%
+    \clearfield{urldate}%
+  }%
+}
+\fi
+%% End: Biblatex
+
+%% Begin: lstlistings
+
+% configuration of lstlisting
+\lstset{%
+	xleftmargin=0.5cm, % expected by LNI
+  captionpos=b,      % expected by LNI
+  fontadjust=true,
+  columns=[c]fixed,
+  keepspaces=true,
+  tabsize=2,
+  basicstyle=\renewcommand{\baselinestretch}{0.95}\ttfamily,
+  commentstyle=\itshape,
+  keywordstyle=\bfseries,
+  mathescape=true,
+  escapechar=§,
+}
+
+% macro for inline code
+\newcommand{\code}[1]{\lstinline[flexiblecolumns=true,basicstyle=\renewcommand{\baselinestretch}{0.95}\ttfamily]{#1}}
+
+%% End: lstlistings
+
+%% Begin: Acronyms
+\usepackage[acronym]{glossaries}
+\glsdisablehyper
+
+% define acronyms here:
+\newacronym{jvm}{JVM}{Java Virtual Machine}
+
+% define special names here (we do not create a glossary, so no descriptions are required)
+\newglossaryentry{dactor}{name={Dactor},plural={Dactors},description={}}
+%% End: Acronyms
+
+
+%% Begin: Macros
+% \newcommand{\reactdb}[1]{\textsc{ReactDB}}
+%% End: Macros
+
+
+%% correct bad hyphenation here
+\hyphenation{net-works semi-conduc-tor}
+
+
+% Start of page count 
+% ----------------------- filled out by publisher/editor
+\startpage{1}
+\editor{Sebastian Schmidl}
+\booktitle{Technical Report}
+% -----------------------
+
+\author[Sebastian Schmidl]{%
+  Sebastian Schmidl%
+  \footnote{%
+    Hasso Plattner Institut, University of Potsdam, Prof.-Dr.-Helmert-Str. 2-3, 14482 Potsdam, %
+    \email{sebastian.schmidl@student.hpi.de}%
+  }%
+}
+\title[Self-Healing Systems with Kubernetes]{Self-Healing Systems with Kubernetes}
+\subtitle{Self-Adaptation in Micro-Service Architectures with Kubernetes Seminar -- Summer Term 2019}
+
+\begin{document}
+\maketitle
+
+% Set to number of authors!
+% Authors use each one footnote counter, set this to align the remaining ones.
+% E.g. 2 authors --> set to 2, next footnote will be 3
+\setcounter{footnote}{1}
+
+\begin{abstract}
+  Abstract goes here.
+\end{abstract}
+
+\begin{keywords}
+Self-Adaptive Systems \and Self-Healing \and Microservices \and Cloud Computing \and Kubernetes \and decentralized \and orchestration
+\end{keywords}
+
+% Contents
+% --------
+\input{paper_toc}
+% --------
+
+% bibliography
+\printbibliography
+
+\end{document}
