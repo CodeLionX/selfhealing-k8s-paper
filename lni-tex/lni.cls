@@ -32,6 +32,9 @@
 \DeclareOption{latin1}{\PassOptionsToPackage{latin1}{inputenc}}
 \DeclareOption{utf8}{\PassOptionsToPackage{utf8}{inputenc}}
 \DeclareOption{ansinew}{\PassOptionsToPackage{ansinew}{inputenc}}
+\newif\ifeditorial
+\editorialtrue
+\DeclareOption{noeditorial}{\editorialfalse}
 \newif\iflnienglish
 \lnienglishfalse
 \DeclareOption{english}{\lnienglishtrue\@clearglobaloption{english}}
@@ -487,12 +490,16 @@
 }%
 \fancypagestyle{plain}{%
    \fancyhead{} % Löscht alle Kopfzeileneinstellungen
-   \fancyhead[RO]{\small\@editor~(Hrsg.):\ \@booktitle,\hspace{1sp}\null\linebreak%
-       Lecture Notes in Informatics (LNI), Gesellschaft für Informatik, Bonn~\@year%
-       \hspace{5pt}\thepage\hspace{0.05cm}}
-   \fancyhead[LE]{\small\@editor~(Hrsg.):\ \@booktitle,\linebreak\hspace{0.05cm}\thepage\hspace{5pt} Lecture Notes in Informatics (LNI), Gesellschaft für Informatik, Bonn~\@year}
+   \ifeditorial
+       \fancyhead[RO]{\small\@editor~(Hrsg.):\ \@booktitle,\hspace{1sp}\null\linebreak%
+           Lecture Notes in Informatics (LNI), Gesellschaft für Informatik, Bonn~\@year%
+           \hspace{5pt}\thepage\hspace{0.05cm}}
+       \fancyhead[LE]{\small\@editor~(Hrsg.):\ \@booktitle,\linebreak\hspace{0.05cm}\thepage\hspace{5pt} Lecture Notes in Informatics (LNI), Gesellschaft für Informatik, Bonn~\@year}
+       \renewcommand{\headrulewidth}{0.4pt} %Linie unter Kopfzeile
+   \else
+       \renewcommand{\headrulewidth}{0pt} %Linie unter Kopfzeile entfernen
+   \fi
    \fancyfoot{} % Löscht alle Fußzeileneinstellungen
-   \renewcommand{\headrulewidth}{0.4pt} %Linie unter Kopfzeile
 }%
 \pagestyle{fancy}
 \fancyhead{} % Löscht alle Kopfzeileneinstellungen
