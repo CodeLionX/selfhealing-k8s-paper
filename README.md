@@ -1,4 +1,4 @@
-# Self-Healing Microservices with Kubernetes (Paper)
+# Self-Healing Microservices with Kubernetes (Paper) [![Build Status](https://travis-ci.com/CodeLionX/selfhealing-k8s-paper.svg?token=pqFUU2qudhkNenBcNwxf&branch=master)](https://travis-ci.com/CodeLionX/selfhealing-k8s-paper)
 
 The main file is called `paper.tex`.
 It contains the preamble and document setup stuff.
