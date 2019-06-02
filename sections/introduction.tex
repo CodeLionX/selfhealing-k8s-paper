@@ -8,16 +8,47 @@
       \begin{itemize}
         \item self-* properties
         \item MAPE-K loop
-        \item transition to self-healing
       \end{itemize}
+
     \item self-healing
       \begin{itemize}
-        \item different levels of self-healing (architecture-based, \etc)
-        \item sub control loop (Detect -- Analyze -- Recover)
-        \item 
+        \item currently widely-used definition for self-healing systems is from \citeauthor{Ghosh}~\cite{Ghosh}:
+          \begin{quote}
+            The key focus [...] is that a self-healing system should recover from the abnormal (or \enquote{unhealthy}) state and return to the normative (\enquote{healthy}) state, and function as it was prior to disruption.
+          \end{quote}
+        \item Neither fault-tolerant systems, nor survivable systems include recovery oriented functionalities that bring the system back to the healthy state, which is the key aspect of self-healing systems~\cite{Ghosh}.
+        \item Combination of~\cite{PsaierSurvey}
+          \begin{itemize}
+            \item Fault-tolerant (handle transient failures and mask permanent ones)
+            \item self-stabilizing (non-fault masking; system converges to legal state in finite time and tries to remain in the same (closure))
+            \item survivable (maintain essential service and recover non-essential after intrusions have been dealt with)
+          \end{itemize}
       \end{itemize}
+
     \item cloud, microservices
+
     \item deployment and orchestration $\rightarrow$ \gls{kubernetes}
+  \end{enumerate}
+
+\section{Self-Healing}
+  \begin{enumerate}
+    \item sub control loop (Detect -- Analyze -- Recover)
+    \item different levels of self-healing (architecture-based, model-based, hierarchical, \etc)
+    \item self-healing management logic external and internal to the managed application
+      \begin{description}
+        \item[external to application]\hfill\\
+          \begin{itemize}
+            \item self-healing and management logic is run in isolation from the application code
+            \item Examples: using services from the infrastructure provider, using third party services, or building an ad-hoc solution (\eg using \gls{kubernetes})~\cite{ToffettiMicroservices}
+            \item current state of the art for monitoring, health management, and scaling logic
+            \item could lead to vendor lock-in
+            \item external management logic has to be themselves resilient, fault-tolerant, and scalable
+          \end{itemize}
+        \item[within application]\hfill\\
+        \begin{itemize}
+          \item approach by~\citeauthor{ToffettiMicroservices} for microservices; leverages standard methods from distributed systems (such as consensus algorithms) to assign self-management functionality to nodes of the application; hierarchical approach~\cite{ToffettiMicroservices}
+        \end{itemize}
+      \end{description}
   \end{enumerate}
 
 \section[Kubernetes]{\gls{kubernetes}}
@@ -29,7 +60,31 @@
 \section{Self-healing with \gls{kubernetes}}
   \begin{enumerate}
     \item How would a setup of a self-healing microservice architecture look like?
-    \item self-healing properties built in
+    \item self-healing properties built in\hfill\\
+          A Controller can create and manage multiple Pods for you, handling replication and rollout, and providing self-healing capabilities at cluster scope.
+
+          \begin{itemize}
+            \item recovery of stateful applications:
+              \begin{itemize}
+                \item Deployment definition via \texttt{StatefulSet}: \url{https://kubernetes.io/docs/tutorials/stateful-application/basic-stateful-set/}
+                \item  Uses \texttt{PersistentVolumes} (provided by the underlying cloud platform, e.g AWS, GCP, OpenStack) for storage
+                \item Pods have a unique identity (name, network id, K8s configuration)
+                \item Failed pods will be rescheduled on other nodes with their identity (re-using the assigned persistent volume and network id)
+                \item A headless Service takes care of service discovery using SRV records and DNS (re-routing traffic to rescheduled pods on different nodes)
+              \end{itemize}
+
+            \item recovery of stateless applications:
+              \begin{itemize}
+                \item Deployment definition via \texttt{Deployment} and the specification of replicas > 1 or with \texttt{ReplicaSet}
+                \item Failing pods will be recreated to match the desired number of replicas (node placement is transparent)
+              \end{itemize}
+
+            \item daemons: applications per node
+              \begin{itemize}
+                \item Defined via \texttt{DaemonSets}: \url{https://kubernetes.io/docs/concepts/workloads/controllers/daemonset}
+                \item Ensures (monitors, restarts) that a copy of an application is run on each node (also on adding or removing nodes)
+              \end{itemize}
+          \end{itemize}
     \item additional configuration and tools needed
   \end{enumerate}
 
