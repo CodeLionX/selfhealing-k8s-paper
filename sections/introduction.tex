@@ -4,6 +4,24 @@
 
 \section{Introduction}\label{sec:introduction}
   \begin{enumerate}
+    \item cloud
+      \begin{itemize}
+        \item cloud computing de-facto standard in industry
+        \item reasons: more flexibility, higher and dynamically available performance, and competitive prices~\cite{ToffettiMicroservices}
+        \item more hardware means more hardware can fail --> plan for failure~\cite{microservices}
+        \item need for resilient systems~\cite{reactivemanifesto}
+        \item achieve it via replication, containment, isolation, and monitoring paired with responsive actions to failures
+      \end{itemize}
+
+    \item microservices
+      \begin{itemize}
+        \item way to allow scaling of applications combined with a way to realize containment and isolation on business boundaries
+        \item decompose software application into small, lightweight, autonomous services ( = scaling units)
+        \item embrace failure: services relying on other services should deal with them failing~\cite{microservices}
+      \end{itemize}
+
+    \item deployment and orchestration $\rightarrow$ \gls{kubernetes}
+
     \item self-adaptive systems
       \begin{itemize}
         \item self-* properties
@@ -25,12 +43,27 @@
           \end{itemize}
       \end{itemize}
 
-    \item cloud, microservices
-
-    \item deployment and orchestration $\rightarrow$ \gls{kubernetes}
+    \item self-healing of microservices in cloud environments
+      \begin{itemize}
+        \item \citeauthor{PsaierSurvey} compare self-healing in cloud environments to the techniques that achieve continuous availability of the application~\cite{PsaierSurvey}:
+          \begin{quote}
+            In cloud environments, self-healing can be considered as the techniques to achieve continuous availability, which involves detecting disruptions, diagnosing failures and recovering with a sound strategy.
+          \end{quote}
+        \item In a cloud environment and a VM or container deployment, all failures are reduced to a single one: service unavailable after a while
+      \end{itemize}
   \end{enumerate}
 
-\section{Self-Healing}
+\section{Related Work?}
+  \begin{itemize}
+    \item Reactive Manifesto~\cite{reactivemanifesto} asks for more resilient and responsive systems. The resilience is achieved by replication, containment, isolation, and delegation. Recovery should be handled by an external component. This could be a self healing component.
+    \item \cite{ToffettiMicroservices}
+    \item \cite{StackCloud}
+    \item \cite{gru}
+    \item \cite{DashofyArchitecture}
+    \item \gls{kubernetes} and alternatives
+  \end{itemize}
+
+\subsection{Self-Healing}
   \begin{enumerate}
     \item sub control loop (Detect -- Analyze -- Recover)
     \item different levels of self-healing (architecture-based, model-based, hierarchical, \etc)
@@ -51,16 +84,16 @@
       \end{description}
   \end{enumerate}
 
-\section[Kubernetes]{\gls{kubernetes}}
+\subsection[Kubernetes]{\gls{kubernetes}}
   \begin{enumerate}
     \item what is \gls{kubernetes}?
     \item architecture and how it works
   \end{enumerate}
 
-\section{Self-healing with \gls{kubernetes}}
+\section{Using \gls{kubernetes} to implement a self-healing application}
   \begin{enumerate}
     \item How would a setup of a self-healing microservice architecture look like?
-    \item self-healing properties built in\hfill\\
+    \item self-healing properties available in \gls{kubernetes}\hfill\\
           A Controller can create and manage multiple Pods for you, handling replication and rollout, and providing self-healing capabilities at cluster scope.
 
           \begin{itemize}
@@ -71,6 +104,7 @@
                 \item Pods have a unique identity (name, network id, K8s configuration)
                 \item Failed pods will be rescheduled on other nodes with their identity (re-using the assigned persistent volume and network id)
                 \item A headless Service takes care of service discovery using SRV records and DNS (re-routing traffic to rescheduled pods on different nodes)
+                \item therefore, relies on the availability and fault-tolerance of the used persistent volumes
               \end{itemize}
 
             \item recovery of stateless applications:
@@ -91,6 +125,14 @@
 \section{Discussion}
   \begin{enumerate}
     \item limitations
+      \begin{itemize}
+        \item \textbf{external management logic has to be themselves resilient, fault-tolerant, and scalable}
+        \item \gls{kubernetes} default only one master $\rightarrow$ HA setup across availability zones
+        \item quite a lot of configuration work, not automation yet (WIP)
+        \item only one master will be active (the other two will be passive), full state replication via etcd
+        \item fail-over will be handled by load balancer component
+        \item \textbf{only external view on the system}
+      \end{itemize}
     \item benefits
     \item interesting facts and insights
   \end{enumerate}
