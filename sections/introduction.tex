@@ -148,6 +148,20 @@
 
 \section{Discussion}
   \begin{enumerate}
+    \item requires containerized microservice application
+    \item code must support scaling and dynamic communication
+    \item provider of \texttt{PersistentVolumes} must ensure their availability and fault-tolerance
+    \item to deal with a node failure, remaining nodes must have enough spare capacity to host the failed pods
+    \item with replication factor 1, there are down times during re-creation of the pod on another node
+    \item regarding the survivability aspect of self-healing systems: I have not found a way to specify or mark mission critical services explicitly, so that they are treated special in the case of failures (maintain essential services and recover non-essential once later).
+    --> found it: \url{https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/}
+      \begin{itemize}
+        \item we can define priority classes and assign pods to those
+        \item pod priority will affect scheduling order (higher priority pods first)
+        \item under resource pressure, higher priority nodes that are created and scheduled will evict lower priority pods (with their graceful termination period after which they are killed)
+        \item pod disruption budgets can be specified to limit the number of replicated pods that are simultaneously down from voluntary disruption (draining, and also preemption)\footnote{\url{https://kubernetes.io/docs/concepts/workloads/pods/disruptions/\#how-disruption-budgets-work}}
+        \item pod disruption budgets are considered only on best effort basis during preemption
+      \end{itemize}
     \item limitations
       \begin{itemize}
         \item \textbf{external management logic has to be themselves resilient, fault-tolerant, and scalable}
@@ -160,7 +174,20 @@
         \item --> automatic node repairs on GCE: \url{https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair}
       \end{itemize}
     \item benefits
+      \begin{itemize}
+        \item healing from pod / container failures and node failures out-of-the-box
+        \item declarative definition of system state
+        \item rich API to retrieve current system state
+      \end{itemize}
     \item interesting facts and insights
   \end{enumerate}
  
- \section{Conclusion}
+\section{Conclusion}
+  \begin{itemize}
+    \item short summary (microservices, self-healing, how \gls{kubernetes} does it)
+    \item self-healing in \gls{kubernetes} is an architectural approach
+    \item achieves fault-tolerance through replication and redundancy
+    \item on failure: redundant components take over
+    \item after failure: the system converges to the desired state by rescheduling pods (pod controller)
+    \item pod priorities and pod disruption budges help on resource pressure and failure to keep essential services running (through terminating non-essential ones and restarting them when more resources get available)
+  \end{itemize}
