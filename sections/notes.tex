@@ -1,0 +1,140 @@
+% !TeX root = ../paper.tex
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_US
+
+\section{Related Work}
+  \begin{itemize}
+    \item Reactive Manifesto~\cite{reactivemanifesto} asks for more resilient and responsive systems. The resilience is achieved by replication, containment, isolation, and delegation. Recovery should be handled by an external component. This could be a self healing component.
+    \item \cite{ToffettiMicroservices}
+    \item \cite{StackCloud}
+    \item \cite{gru}
+    \item \cite{DashofyArchitecture}
+    \item \gls{kubernetes} and alternatives
+  \end{itemize}
+
+\section{Self-Healing}
+  \begin{enumerate}
+    \item sub control loop of MAPE-K loop (Detect -- Analyze -- Recover)~\cite{PsaierSurvey}
+    \item different levels of self-healing (architecture-based, model-based, hierarchical, \etc)
+    \item self-healing management logic external and internal to the managed application
+      \begin{description}
+        \item[external to application]\hfill\\
+          \begin{itemize}
+            \item self-healing and management logic is run in isolation from the application code
+            \item Examples: using services from the infrastructure provider, using third party services, or building an ad-hoc solution (\eg using \gls{kubernetes})~\cite{ToffettiMicroservices}
+            \item current state of the art for monitoring, health management, and scaling logic
+            \item could lead to vendor lock-in
+            \item external management logic has to be themselves resilient, fault-tolerant, and scalable
+          \end{itemize}
+        \item[within application]\hfill\\
+        \begin{itemize}
+          \item approach by~\citeauthor{ToffettiMicroservices} for microservices; leverages standard methods from distributed systems (such as consensus algorithms) to assign self-management functionality to nodes of the application; hierarchical approach~\cite{ToffettiMicroservices}
+        \end{itemize}
+      \end{description}
+  \end{enumerate}
+
+\section[Kubernetes]{\gls{kubernetes}}
+  \begin{enumerate}
+    \item what is \gls{kubernetes}? --> \url{https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/}
+    \item architecture and how it works
+      \begin{itemize}
+        \item master-slave architecture
+        \item master runs kube controller manager, API server, etcd, kube scheduler, cloud controller manager
+        \item slave (nodes) run kubelet (pod management and health monitoring) and kube proxy (cluster networking), and container runtime (e.g. Docker)
+        \item only slaves run application code
+      \end{itemize}
+    \item \gls{kubernetes} objects\footnote{\url{https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/}} and labels\footnote{\url{https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/}}
+    \item pods and containers\footnote{\url{https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/}}
+  \end{enumerate}
+
+\section{Using \gls{kubernetes} to implement a self-healing application}
+  \begin{enumerate}
+    \item How would a setup of a self-healing microservice architecture look like?
+    \item comparable to architecture-based approach
+      \begin{enumerate}
+        \item \gls{kubernetes} object configuration corresponds to the desired runtime architecture of the managed application. (\cite{ToffettiMicroservices} call it \textit{instance graph})
+        \item \gls{kubernetes} internally holds the current architecture of the running components (in \textit{etcd})
+        \item Container failures are captured by the restart policy of their pods. When set to \textit{Always} or \textit{OnFailure}, failing containers are restarted with an exponential back-off delay\footnote{\url{https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/\#restart-policy}}.
+        \item To deal with node failures, pods have to be managed by controllers (explained later)\footnote{\url{https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/\#pod-lifetime}}. They perform the Detect -- Analyze -- Recover loop by
+          \begin{itemize}
+            \item monitoring the health of their managed pods with heartbeats and user-defined liveness probes\footnote{\url{https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/}}
+            \item comparing the desired and current state of their pods
+            \item performing actions (create or delete pod) to transition into the desired state
+          \end{itemize}
+        \item \gls{kubernetes} sets the phase of all pods on a died or disconnected node to \textit{Failed}
+      \end{enumerate}
+    \item self-healing properties available in \gls{kubernetes} via controllers:\hfill\\
+          \enquote{A Controller can create and manage multiple Pods for you, handling replication and rollout, and providing self-healing capabilities at cluster scope. -- \url{https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/\#pods-and-controllers}}
+          Pods are transparently placed on the available nodes by the controller.
+
+          \begin{itemize}
+            \item recovery of stateful applications:
+              \begin{itemize}
+                \item Deployment definition via \texttt{StatefulSet}: \url{https://kubernetes.io/docs/tutorials/stateful-application/basic-stateful-set/}
+                \item  Uses \texttt{PersistentVolumes} (provided by the underlying cloud platform, e.g AWS, GCP, OpenStack) for storage
+                \item Pods have a unique identity (name, network id, K8s configuration)
+                \item Failed pods will be rescheduled on other nodes with their identity (re-using the assigned persistent volume and network id)
+                \item A headless Service takes care of service discovery using SRV records and DNS (re-routing traffic to rescheduled pods on different nodes)
+                \item therefore, relies on the availability and fault-tolerance of the used persistent volumes
+              \end{itemize}
+
+            \item recovery of stateless applications:
+              \begin{itemize}
+                \item Deployment definition via \texttt{Deployment} and the specification of replicas > 1 or with \texttt{ReplicaSet}
+                \item Failing pods will be recreated to match the desired number of replicas (node placement is transparent)
+              \end{itemize}
+
+            \item daemons: applications per node
+              \begin{itemize}
+                \item Defined via \texttt{DaemonSets}: \url{https://kubernetes.io/docs/concepts/workloads/controllers/daemonset}
+                \item Ensures (monitors, restarts) that a copy of an application is run on each node (also on added or removed nodes)
+                \item no real recovery if a node fails. Relies on manual action to replace the failed node. Then the \texttt{DaemonSet} will take care of creating the daemon pod on the newly added node.
+              \end{itemize}
+          \end{itemize}
+    \item regarding the survivability aspect of self-healing systems: \url{https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/}
+      \begin{itemize}
+        \item we can define priority classes and assign pods to those
+        \item pod priority will affect scheduling order (higher priority pods first)
+        \item under resource pressure, higher priority nodes that are created and scheduled will evict lower priority pods (with their graceful termination period after which they are killed)
+        \item pod disruption budgets can be specified to limit the number of replicated pods that are simultaneously down from voluntary disruption (draining, and also preemption)\footnote{\url{https://kubernetes.io/docs/concepts/workloads/pods/disruptions/\#how-disruption-budgets-work}}
+        \item pod disruption budgets are considered only on best effort basis during preemption
+      \end{itemize}
+  \end{enumerate}
+
+\section{Discussion}
+  \begin{enumerate}
+    \item requires containerized microservice application
+    \item code must support scaling and dynamic communication
+    \item provider of \texttt{PersistentVolumes} must ensure their availability and fault-tolerance
+    \item to deal with a node failure, remaining nodes must have enough spare capacity to host the failed pods
+    \item with replication factor 1, there are down times during re-creation of the pod on another node
+    \item limitations
+      \begin{itemize}
+        \item \textbf{external management logic has to be themselves resilient, fault-tolerant, and scalable}
+        \item \gls{kubernetes} default only one master $\rightarrow$ HA setup across availability zones
+        \item quite a lot of configuration work, not automation yet (WIP)
+        \item only one master will be active (the other two will be passive), full state replication via etcd
+        \item fail-over will be handled by load balancer component
+        \item \textbf{only external view on the system}
+        \item \textbf{\gls{kubernetes} does not automatically repair or restart failing nodes}
+        \item --> automatic node repairs on GCE: \url{https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair}
+        \item components external to \gls{kubernetes} are not included in self-healing logic (such as external storage or load balancers of cloud provider)
+      \end{itemize}
+    \item benefits
+      \begin{itemize}
+        \item healing from pod / container failures and node failures out-of-the-box
+        \item declarative definition of system state
+        \item rich API to retrieve current system state
+      \end{itemize}
+    \item interesting facts and insights
+  \end{enumerate}
+ 
+\section{Conclusion}
+  \begin{itemize}
+    \item short summary (microservices, self-healing, how \gls{kubernetes} does it)
+    \item self-healing in \gls{kubernetes} is an architectural approach
+    \item achieves fault-tolerance through replication and redundancy
+    \item on failure: redundant components take over
+    \item after failure: the system converges to the desired state by rescheduling pods (pod controller)
+    \item pod priorities and pod disruption budges help on resource pressure and failure to keep essential services running (through terminating non-essential ones and restarting them when more resources get available)
+  \end{itemize}

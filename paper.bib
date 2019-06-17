@@ -8,6 +8,7 @@
 @STRING{ADDR-MITPRESS = {Cambridge, MA, USA}}
 @STRING{AI = {Artificial Intelligence}}
 @STRING{AIMAG = {AI Magazine}}
+@STRING{AIMC = {Proceedings of the 1st International Workshop on Automated Incident Management in Cloud}}
 @STRING{AMG = {New York, NY}}
 @STRING{AMK = {San Francisco, CA, USA}}
 @STRING{APH = {Englewood Cliffs, NJ, USA}}
@@ -19,6 +20,7 @@
 @STRING{CAISE = {Proceedings of the Conference on Advanced Information Systems Engineering (CAiSE)}}
 @STRING{CIDR = {Proceedings of the Conference on Innovative Data Systems Research (CIDR)}}
 @STRING{CIKM = {Proceedings of the International Conference on Information and Knowledge Management (CIKM)}}
+@STRING{CloudNG = {Proceedings of the 1st International Workshop on Next Generation of Cloud Architectures}}
 @STRING{COMAD = {Proceedings of the International Conference on Management of Data (COMAD)}}
 @STRING{COOPIS = {Proceedings of the International Conference on Cooperative Information Systems (CoopIS)}}
 @STRING{DASFAA = {Proceedings of the International Conference on Database Systems for Advanced Applications (DASFAA)}}
@@ -31,13 +33,14 @@
 @STRING{DKE = {Data and Knowledge Engineering (DKE)}}
 @STRING{DOOD = {Proceedings of the International Conference on Deductive and Object-Oriented Databases (DOOD)}}
 @STRING{DPUNKT = {dpunkt.verlag, Heidelberg}}
-@STRING{DQCIS = {Proceedings of the International Workshop on Data Quality in Cooperative Information Systsems (DQCIS)}}
+@STRING{DQCIS = {Proceedings of the International Workshop on Data Quality in Cooperative Information Systems (DQCIS)}}
 @STRING{EDBT = {Proceedings of the International Conference on Extending Database Technology (EDBT)}}
 @STRING{EFIS = {Proceedings of the International Workshop on Engineering Federated Information Systems (EFIS)}}
 @STRING{ER = {Proceedings of the International Conference on Conceptual Modeling (ER)}}
 @STRING{FDBS = {Proceedings of the Workshop Föderierte Datenbanken (FDBS)}}
 @STRING{FOCS = {Proceedings of the Symposium on Foundations of Computer Science}}
 @STRING{FQAS = {Proceedings of the International Conference on Flexible Query Answering Systems (FQAS)}}
+@STRING{ICAC = {IEEE International Conference on Autonomic Computing (ICAC)}}
 @STRING{ICDE = {Proceedings of the International Conference on Data Engineering (ICDE)}}
 @STRING{ICDT = {Proceedings of the International Conference on Database Theory (ICDT)}}
 @STRING{IDEAS = {Proceedings of the International Database Engineering and Applications Symposium (IDEAS)}}
@@ -50,7 +53,7 @@
 @STRING{JACM = {Journal of the ACM}}
 @STRING{JDIGLIB = {Journal of Digital Libraries}}
 @STRING{JMOLBIOL = {Journal of Molecular Biology}}
-@STRING{KRDB = {Proceedings of the International Workshop on Knowledge Represenation Meets Databases (KRDB)}}
+@STRING{KRDB = {Proceedings of the International Workshop on Knowledge Representation Meets Databases (KRDB)}}
 @STRING{MG = {McGraw-Hill, Inc.}}
 @STRING{MIT = {MIT Press}}
 @STRING{MK = {Morgan Kaufmann}}
@@ -82,15 +85,83 @@
 @STRING{WEBDB = {Proceedings of the ACM Workshop on the Web and Databases (WebDB)}}
 @STRING{WISE = {Proceedings of the International Conference on Web Information Systems Engineering (WISE)}}
 @STRING{WITS = {Proceedings of the Workshop on Information Technologies and Systems (WITS)}}
+@STRING{WOSS = {Proceedings of the First Workshop on Self-healing Systems (WOSS)}}
 @STRING{WWW = {Proceedings of the International World Wide Web Conference (WWW)}}
 
 %% entries
+@book{microservices,
+  author = {Newman, Sam},
+  title = {Building Microservices: Designing Fine-Grained Systems},
+  year = {2015},
+  publisher = {O'Reilly Media},
+  isbn = {978-1491950357}
+}
 
-% example
-@inproceedings{Shah:reactdb,
-  author     = {Shah, Vivek and Salles, Marcos Vaz},
-  title      = {Reactors: {A} Case for Predictable, Virtualized Actor Database Systems},
-  booktitle  = COMAD,
-  year       = {2017},
-  pages      = {259--274},
+@article{PsaierSurvey,
+  author={Psaier, Harald and Dustdar, Schahram},
+  title={A survey on self-healing systems: approaches and systems},
+  journal={Computing},
+  year={2011},
+  volume={91},
+  number={1},
+  pages={43--73},
+  doi={10.1007/s00607-010-0107-y}
+}
+
+@article{Ghosh,
+  author = {Ghosh, Debanjan and Sharman, Raj and Raghav Rao, H. and Upadhyaya, Shambhu},
+  title = {Self-healing Systems - Survey and Synthesis},
+  journal = {Decision Support Systems},
+  year = {2007},
+  volume = {42},
+  number = {4},
+  pages = {2164--2185},
+  doi = {10.1016/j.dss.2006.06.011}
+} 
+
+@inproceedings{StackCloud,
+  author = {Stack, Paul and Xiong, Huanhuan and Mersel, Dali and Makhloufi, Maxime and Terpend, Guillaume and Dong, Dapeng},
+  title = {Self-Healing in a Decentralised Cloud Management System},
+  booktitle = CloudNG,
+  year = {2017},
+  pages = {3:1--3:6},
+  doi = {10.1145/3068126.3068129}
+}
+
+@inproceedings{ToffettiMicroservices,
+  author = {Toffetti, Giovanni and Brunner, Sandro and Blöchlinger, Martin and Dudouet, Florian and Edmonds, Andy},
+  title = {An architecture for self-managing microservices},
+  booktitle = AIMC,
+  year = {2015},
+  pages = {19-24},
+  doi = {10.1145/2747470.2747474}
+}
+
+@inproceedings{gru,
+  author = {L. {Florio} and E. D. {Nitto}},
+  title = {Gru: An Approach to Introduce Decentralized Autonomic Behavior in Microservices Architectures},
+  booktitle = ICAC,
+  year = {2016},
+  pages = {357-362},
+  doi = {10.1109/ICAC.2016.25}
+}
+
+@inproceedings{DashofyArchitecture,
+  author = {Dashofy, Eric M. and van der Hoek, Andr{\'e} and Taylor, Richard N.},
+  title = {Towards Architecture-based Self-healing Systems},
+  booktitle = WOSS,
+  year = {2002},
+  pages = {21--26},
+  doi = {10.1145/582128.582133}
+}
+
+
+% online
+
+@online{reactivemanifesto,
+  author = {Jonas Bonér and Dave Farley and Roland Kuhn and Martin Thompson},
+  title = {The Reactive Manifesto},
+  year = {2014},
+  url = {https://www.reactivemanifesto.org},
+  urldate = {2019-06-04}
 }

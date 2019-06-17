@@ -3,41 +3,54 @@
 % !TeX spellcheck = en_US
 
 \section{Introduction}\label{sec:introduction}
-  \begin{enumerate}
-    \item self-adaptive systems
-      \begin{itemize}
-        \item self-* properties
-        \item MAPE-K loop
-        \item transition to self-healing
-      \end{itemize}
-    \item self-healing
-      \begin{itemize}
-        \item different levels of self-healing (architecture-based, \etc)
-        \item sub control loop (Detect -- Analyze -- Recover)
-        \item 
-      \end{itemize}
-    \item cloud, microservices
-    \item deployment and orchestration $\rightarrow$ \gls{kubernetes}
-  \end{enumerate}
 
-\section[Kubernetes]{\gls{kubernetes}}
-  \begin{enumerate}
-    \item what is \gls{kubernetes}?
-    \item architecture and how it works
-  \end{enumerate}
-
-\section{Self-healing with \gls{kubernetes}}
-  \begin{enumerate}
-    \item How would a setup of a self-healing microservice architecture look like?
-    \item self-healing properties built in
-    \item additional configuration and tools needed
-  \end{enumerate}
-
-\section{Discussion}
-  \begin{enumerate}
-    \item limitations
-    \item benefits
-    \item interesting facts and insights
-  \end{enumerate}
- 
- \section{Conclusion}
+\begin{enumerate}
+  \item cloud
+  \begin{itemize}
+    \item cloud computing de-facto standard in industry
+    \item reasons: more flexibility, higher and dynamically available performance, and competitive prices~\cite{ToffettiMicroservices}
+    \item more hardware means more hardware can fail --> plan for failure~\cite{microservices}
+    \item need for resilient systems~\cite{reactivemanifesto}
+    \item achieve it via replication, containment, isolation, and monitoring paired with responsive actions to failures
+  \end{itemize}
+  
+  \item microservices
+  \begin{itemize}
+    \item way to allow scaling of applications combined with a way to realize containment and isolation on business boundaries
+    \item decompose software application into small, lightweight, autonomous services ( = scaling units)
+    \item embrace failure: services relying on other services should deal with them failing~\cite{microservices}
+  \end{itemize}
+  
+  \item deployment and orchestration $\rightarrow$ \gls{kubernetes}
+  
+  \item self-adaptive systems
+  \begin{itemize}
+    \item self-* properties
+    \item MAPE-K loop
+  \end{itemize}
+  
+  \item self-healing
+  \begin{itemize}
+    \item currently widely-used definition for self-healing systems is from \citeauthor{Ghosh}~\cite{Ghosh}:
+    \begin{quote}
+      The key focus [...] is that a self-healing system should recover from the abnormal (or \enquote{unhealthy}) state and return to the normative (\enquote{healthy}) state, and function as it was prior to disruption.
+    \end{quote}
+    
+    \item Neither fault-tolerant systems, nor survivable systems include recovery oriented functionalities that bring the system back to the healthy state, which is the key aspect of self-healing systems~\cite{Ghosh}.    
+    \item Combination of~\cite{PsaierSurvey}
+    \begin{itemize}
+      \item Fault-tolerant (handle transient failures and mask permanent ones)
+      \item self-stabilizing (non-fault masking; system converges to legal state in finite time and tries to remain in the same (closure))
+      \item survivable (maintain essential service and recover non-essential after intrusions have been dealt with)
+    \end{itemize}
+  \end{itemize}
+  
+  \item self-healing of microservices in cloud environments
+  \begin{itemize}
+    \item \citeauthor{PsaierSurvey} compare self-healing in cloud environments to the techniques that achieve continuous availability of the application~\cite{PsaierSurvey}:
+    \begin{quote}
+      In cloud environments, self-healing can be considered as the techniques to achieve continuous availability, which involves detecting disruptions, diagnosing failures and recovering with a sound strategy.
+    \end{quote}
+    \item In a cloud environment and a VM or container deployment, all failures are reduced to a single one: service unavailable after a while
+  \end{itemize}
+\end{enumerate}
