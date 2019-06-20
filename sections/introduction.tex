@@ -52,6 +52,6 @@
   While systems and software components can fail in various ways and research has come up with general failure classifications and resolutions~\cite[Tab.~1]{PsaierSurvey}, failures in cloud environments can be reduced to one failure: a node is unreachable.
   Although an unreachable node can have different root causes on the infrastructure level, the impact on the system is the same and we have no control about the infrastructure in a cloud deployment.
   This means that we have to find other ways besides repairing the infrastructure to heal from those failures.
-  Node failures can be detected via heartbeat messages or latency metrics.
+  Node failures can be detected via heartbeat messages or latency metrics and a common recovery strategy used is the restart of the software that was running on the node on another node.
 
   \textbf{Contribution and Summary}
