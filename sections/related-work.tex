@@ -1,0 +1,43 @@
+% !TeX root = ../paper.tex
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_US
+ 
+\section{Related Work}
+  \begin{itemize}
+    \item Reactive Manifesto~\cite{reactivemanifesto} asks for more resilient and responsive systems.
+      The resilience is achieved by replication, containment, isolation, and delegation.
+      Recovery should be handled by an external component.
+      This could be a self-healing component.
+    \item \cite{StackCloud}
+      \begin{itemize}
+        \item hierarchical approach
+        \item layered master-slave architecture to provide flexibility and high availability
+        \item targets decentralized cloud architectures
+      \end{itemize}
+    \item \cite{ToffettiMicroservices}
+      \begin{itemize}
+        \item architecture-based approach
+        \item self-managing microservice applications
+        \item within application
+        \item targets microservice applications
+      \end{itemize}
+    \item \cite{DashofyArchitecture}
+      \begin{itemize}
+        \item architecture-based approach
+        \item $\rightarrow$ repairs are done on the level of software components or connectors
+        \item external to application
+        \item targets event-based software architectures
+      \end{itemize}
+    \item This approach
+      \begin{itemize}
+        \item microservice container orchestrator approach
+        \item $\rightarrow$ repairs are done on container-level
+        \item external to application (\gls{kubernetes})
+        \item targets microservice architectures deployed in cloud environments using containers and \gls{kubernetes}
+      \end{itemize}
+    \item \cite{gru}
+      \begin{itemize}
+        \item similar to this approach, but they have developed their own container orchestration tool, called Gru, instead of using \gls{kubernetes}
+        \item also targets microservice architectures deployed in containers
+      \end{itemize}
+  \end{itemize}

@@ -1,0 +1,13 @@
+% !TeX root = ../paper.tex
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_US
+
+\section{Conclusion}
+  \begin{itemize}
+    \item short summary (microservices, self-healing, how \gls{kubernetes} does it)
+    \item self-healing in \gls{kubernetes} is an architectural approach
+    \item achieves fault-tolerance through replication and redundancy
+    \item on failure: redundant components take over
+    \item after failure: the system converges to the desired state by rescheduling pods (pod controller)
+    \item pod priorities and pod disruption budges help on resource pressure and failure to keep essential services running (through terminating non-essential ones and restarting them when more resources get available)
+  \end{itemize}

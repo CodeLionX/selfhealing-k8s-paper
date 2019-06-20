@@ -1,0 +1,31 @@
+% !TeX root = ../paper.tex
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_US
+
+\section{Discussion}
+  \begin{enumerate}
+    \item requires containerized microservice application
+    \item code must support scaling and dynamic communication
+    \item provider of \texttt{PersistentVolumes} must ensure their availability and fault-tolerance
+    \item to deal with a node failure, remaining nodes must have enough spare capacity to host the failed pods
+    \item with replication factor 1, there are down times during re-creation of the pod on another node
+    \item limitations
+    \begin{itemize}
+      \item \textbf{external management logic has to be themselves resilient, fault-tolerant, and scalable}
+      \item \gls{kubernetes} default only one master $\rightarrow$ HA setup across availability zones
+      \item quite a lot of configuration work, not automation yet (WIP)
+      \item only one master will be active (the other two will be passive), full state replication via etcd
+      \item fail-over will be handled by load balancer component
+      \item \textbf{only external view on the system}
+      \item \textbf{\gls{kubernetes} does not automatically repair or restart failing nodes}
+      \item --> automatic node repairs on GCE: \url{https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair}
+      \item components external to \gls{kubernetes} are not included in self-healing logic (such as external storage or load balancers of cloud provider)
+    \end{itemize}
+    \item benefits
+    \begin{itemize}
+      \item healing from pod / container failures and node failures out-of-the-box
+      \item declarative definition of system state
+      \item rich API to retrieve current system state
+    \end{itemize}
+    \item interesting facts and insights
+  \end{enumerate}

@@ -1,0 +1,38 @@
+% !TeX root = ../paper.tex
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_US
+
+\section{Self-Healing}
+  \begin{enumerate}
+    \item sub control loop of MAPE-K loop (Detect -- Analyze -- Recover)~\cite{PsaierSurvey}
+    \item different levels of self-healing (architecture-based, model-based, hierarchical, \etc)
+    \item self-healing management logic external and internal to the managed application
+      \begin{description}
+        \item[external to application]\hfill\\
+          \begin{itemize}
+            \item self-healing and management logic is run in isolation from the application code
+            \item Examples: using services from the infrastructure provider, using third party services, or building an ad-hoc solution (\eg using \gls{kubernetes})~\cite{ToffettiMicroservices}
+            \item current state of the art for monitoring, health management, and scaling logic
+            \item could lead to vendor lock-in
+            \item external management logic has to be themselves resilient, fault-tolerant, and scalable
+          \end{itemize}
+        \item[within application]\hfill\\
+        \begin{itemize}
+          \item approach by~\citeauthor{ToffettiMicroservices} for microservices; leverages standard methods from distributed systems (such as consensus algorithms) to assign self-management functionality to nodes of the application; hierarchical approach~\cite{ToffettiMicroservices}
+        \end{itemize}
+      \end{description}
+  \end{enumerate}
+
+\section[Kubernetes]{\gls{kubernetes}}
+  \begin{enumerate}
+    \item what is \gls{kubernetes}? --> \url{https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/}
+    \item architecture and how it works
+      \begin{itemize}
+        \item master-slave architecture
+        \item master runs kube controller manager, API server, etcd, kube scheduler, cloud controller manager
+        \item slave (nodes) run kubelet (pod management and health monitoring) and kube proxy (cluster networking), and container runtime (e.g. Docker)
+        \item only slaves run application code
+      \end{itemize}
+    \item \gls{kubernetes} objects\footnote{\url{https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/}} and labels\footnote{\url{https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/}}
+    \item pods and containers\footnote{\url{https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/}}
+  \end{enumerate}
