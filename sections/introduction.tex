@@ -13,11 +13,13 @@
   One way to realize containment and isolation of software components in a scalable way are microservice architectures.
   In this approach, the software application is decomposed along business domain boundaries into small, lightweight, autonomous services.
   Each service runs as its own application decoupled from the other services and acts as a scaling unit.
+  Services communicate through lightweight REST APIs or asynchronous message queues.
   Microservice architectures embrace failure.
   If a service relies on another services, it is aware that the other service may not be available or the connection may be slow and the service can deal with the failures~\cite{microservices}.
 
   For those complex distributed software systems consisting of hundreds of microservices, deployment and management gets more complex as well.
-  That's the reason automation tools, such as \gls{kubernetes}~\cite{kubernetes}, for the deployment, scaling, and management of distributed applications exist.
+  The service management can be simplified by executing the microservices isolated from each other in containers, such as Docker containers~\cite{docker}.
+  Container orchestration tools, such as \gls{kubernetes}~\cite{kubernetes}, can further be used for the deployment, scaling, and management of the containerized distributed microservice applications.
 
   The increasing complexity of modern software systems motivated the development of self-adaptive systems.
   Those systems introduce an autonomous behavior that takes decisions at runtime and manages the complex underlying software system.
@@ -46,14 +48,11 @@
 
   This definition is very broad, but one can argue that the key aspect of self-healing systems are recovery oriented functionalities that bring the system back to the healthy state, which neither sole fault-tolerant systems nor sole survivable systems encompass~\cite{PsaierSurvey}.
 
+  In cloud environments, self-healing techniques are already used in the form of approaches and tools that try to achieve continuous availability for cloud services, such as \gls{kubernetes}.
+  Those tools detect disruptions, diagnose failures and recover from them by applying an appropriate strategy~\cite{PsaierSurvey}.
+  While systems and software components can fail in various ways and research has come up with general failure classifications and resolutions~\cite[Tab.~1]{PsaierSurvey}, failures in cloud environments can be reduced to one failure: a node is unreachable.
+  Although an unreachable node can have different root causes on the infrastructure level, the impact on the system is the same and we have no control about the infrastructure in a cloud deployment.
+  This means that we have to find other ways besides repairing the infrastructure to heal from those failures.
+  Node failures can be detected via heartbeat messages or latency metrics.
 
-\begin{enumerate}
-  \item self-healing of microservices in cloud environments
-  \begin{itemize}
-    \item \citeauthor{PsaierSurvey} compare self-healing in cloud environments to the techniques that achieve continuous availability of the application~\cite{PsaierSurvey}:
-    \begin{quote}
-      In cloud environments, self-healing can be considered as the techniques to achieve continuous availability, which involves detecting disruptions, diagnosing failures and recovering with a sound strategy.
-    \end{quote}
-    \item In a cloud environment and a VM or container deployment, all failures are reduced to a single one: service unavailable after a while
-  \end{itemize}
-\end{enumerate}
+  \textbf{Contribution and Summary}
