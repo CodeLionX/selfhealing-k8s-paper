@@ -3,25 +3,35 @@
 % !TeX spellcheck = en_US
 
 \section{Self-Healing}
-  \begin{enumerate}
-    \item sub control loop of MAPE-K loop (Detect -- Analyze -- Recover)~\cite{PsaierSurvey}
-    \item different levels of self-healing (architecture-based, model-based, hierarchical, \etc)
-    \item self-healing management logic external and internal to the managed application
-      \begin{description}
-        \item[external to application]\hfill\\
-          \begin{itemize}
-            \item self-healing and management logic is run in isolation from the application code
-            \item Examples: using services from the infrastructure provider, using third party services, or building an ad-hoc solution (\eg using \gls{kubernetes})~\cite{ToffettiMicroservices}
-            \item current state of the art for monitoring, health management, and scaling logic
-            \item could lead to vendor lock-in
-            \item external management logic has to be themselves resilient, fault-tolerant, and scalable
-          \end{itemize}
-        \item[within application]\hfill\\
-        \begin{itemize}
-          \item approach by~\citeauthor{ToffettiMicroservices} for microservices; leverages standard methods from distributed systems (such as consensus algorithms) to assign self-management functionality to nodes of the application; hierarchical approach~\cite{ToffettiMicroservices}
-        \end{itemize}
-      \end{description}
-  \end{enumerate}
+  Like in an autonomous system, the main component in a self-healing system is the self-healing manager.
+  It runs a control loop with three stages that is a reduced version of the autonomic control loop, also referred to as MAPE-K loop~\cite{ibm_autonomic}.
+  The self-healing loop consists of the following three main stages~\cite{PsaierSurvey}:
+
+  \begin{description}
+    \item[Detect] The self-healing manager filters the status information about the running system and reports suspicious events and detected degradations.
+    \item[Diagnose] The diagnosis stage performs root cause analysis on the received reports from the previous stage and calculates a recovery strategy.
+    \item[Recover] In the recovery phase the manager applies the strategies to the system while he avoids any unpredictable side effects.
+  \end{description}
+
+  These three stages reflect the definition of self-healing.
+  There are different ways, how a software system can be equipped with the above mentioned self-healing capabilities.
+
+  The first approach is a software application with built-in self-healing logic.
+  This means that the self-healing manager is within the application code and is able to access internal state and mechanisms.
+  This can be an advantage as the application is a white box and the self-healing logic can use detailed status information and even domain knowledge for detection, analysis and recovery.
+  At the other hand, this also means that the healing logic is tied to the application increasing coupling and violating the separation of concerns principle.
+  If the application starves the self-healing manager may starve as well.
+  \citeauthor{ToffettiMicroservices} propose such a system for a microservice architecture.
+  They leverage standard methods from distributed systems (\ie consensus algorithms) to assign self-management (includes self-healing) functionality to some nodes of the distributed application.
+  The selected nodes form a hierarchy and perform different parts of the self-management logic.
+  This means that the self-management logic is distributed in the cluster to overcome the connectedness to the application code.
+
+  The second approach is an external self-healing manager provided as an infrastructural component or as third-party service.
+  The self-healing logic runs in isolation from the application code and can therefore treat the application only as a black box and has to use external metrics to judge the application's health.
+  It's the current state of the art for monitoring, health management and scaling logic~\cite{ToffettiMicroservices}.
+  The external management logic has to be themselves resilient, fault-tolerant, and scalable for being able to heal the application.
+  Using third party services or services provided by the infrastructure provider could lead to vendor lock-in.
+  There are also open-source alternatives that can be used as middleware between cloud infrastructure and the application, such as \gls{kubernetes}.
 
 \section[Kubernetes]{\gls{kubernetes}}
   \begin{enumerate}
