@@ -2,26 +2,26 @@
 % !TeX encoding = UTF-8
 % !TeX spellcheck = en_US
 
-\section{Using \gls{kubernetes} to implement a self-healing application}
-  In this section we will go through the setup of a self-healing microservice application with \gls{kubernetes}.
+\section{\Gls{kubernetes}' self-healing capabilities}
+  In this section we will go through the self-healing capabilities available with \gls{kubernetes}.
   \gls{kubernetes}'s approach to self-healing is comparable to architecture-based self-healing~\cite{ToffettiMicroservices,DashofyArchitecture}.
-  
+  Its declarative object configuration model resembles the concept of a desired and actual runtime architecture of the managed application.
+  The user of \gls{kubernetes}, which can also be another software program as the \gls{kubernetes} API is machine-readable, can define the desired system architecture as the \texttt{spec} part of the deployment configuration.
+  % \citeauthor{ToffettiMicroservices} call this the \textit{instance graph}~\cite{ToffettiMicroservices}.
+  It is stored by the master components in \texttt{etcd}.
+  \Gls{kubernetes} then internally creates the \texttt{state} part of the objects that represents the current architecture of the running components and updates them in \texttt{etcd}.
+  Based on those two representations corrective measures can then be taken by \gls{kubernetes} fully automatically to let the actual state converge to the desired one.
+
 
   \begin{enumerate}
-    \item How would a setup of a self-healing microservice architecture look like?
-    \item comparable to architecture-based approach
-      \begin{enumerate}
-        \item \gls{kubernetes} object configuration corresponds to the desired runtime architecture of the managed application. (\cite{ToffettiMicroservices} call it \textit{instance graph})
-        \item \gls{kubernetes} internally holds the current architecture of the running components (in \textit{etcd})
-        \item Container failures are captured by the restart policy of their pods. When set to \textit{Always} or \textit{OnFailure}, failing containers are restarted with an exponential back-off delay\footnote{\url{https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/\#restart-policy}}.
-        \item To deal with node failures, pods have to be managed by controllers (explained later)\footnote{\url{https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/\#pod-lifetime}}. They perform the Detect -- Analyze -- Recover loop by
-          \begin{itemize}
-            \item monitoring the health of their managed pods with heartbeats and user-defined liveness probes\footnote{\url{https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/}}
-            \item comparing the desired and current state of their pods
-            \item performing actions (create or delete pod) to transition into the desired state
-          \end{itemize}
-        \item \gls{kubernetes} sets the phase of all pods on a died or disconnected node to \textit{Failed}
-      \end{enumerate}
+    \item Container failures are captured by the restart policy of their pods. When set to \textit{Always} or \textit{OnFailure}, failing containers are restarted with an exponential back-off delay\footnote{\url{https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/\#restart-policy}}.
+    \item To deal with node failures, pods have to be managed by controllers (explained later)\footnote{\url{https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/\#pod-lifetime}}. They perform the Detect -- Analyze -- Recover loop by
+      \begin{itemize}
+        \item monitoring the health of their managed pods with heartbeats and user-defined liveness probes\footnote{\url{https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/}}
+        \item comparing the desired and current state of their pods
+        \item performing actions (create or delete pod) to transition into the desired state
+      \end{itemize}
+    \item \gls{kubernetes} sets the phase of all pods on a died or disconnected node to \textit{Failed}
     \item self-healing properties available in \gls{kubernetes} via controllers:\hfill\\
           \enquote{A Controller can create and manage multiple Pods for you, handling replication and rollout, and providing self-healing capabilities at cluster scope. -- \url{https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/\#pods-and-controllers}}
           Pods are transparently placed on the available nodes by the controller.

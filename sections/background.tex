@@ -34,15 +34,40 @@
   There are also open-source alternatives that can be used as middleware between cloud infrastructure and the application, such as \gls{kubernetes}.
 
 \section[Kubernetes]{\gls{kubernetes}}
-  \begin{enumerate}
-    \item what is \gls{kubernetes}? --> \url{https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/}
-    \item architecture and how it works
-      \begin{itemize}
-        \item master-slave architecture
-        \item master runs kube controller manager, API server, etcd, kube scheduler, cloud controller manager
-        \item slave (nodes) run kubelet (pod management and health monitoring) and kube proxy (cluster networking), and container runtime (e.g. Docker)
-        \item only slaves run application code
-      \end{itemize}
-    \item \gls{kubernetes} objects\footnote{\url{https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/}} and labels\footnote{\url{https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/}}
-    \item pods and containers\footnote{\url{https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/}}
-  \end{enumerate}
+  % https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/
+  \Gls{kubernetes} is an open-source platform for automating and managing distributed software in the cloud.
+  It heavily relies on container technology and supports the declarative configuration of the managed containers.
+  \Gls{kubernetes} was developed by Google and is open-source software since 2014~\cite{kubernetes}.
+
+  % https://kubernetes.io/docs/concepts/overview/components/
+  \Gls{kubernetes} is build on top of existing \gls{paas} solutions and consists of a master-slave architecture forming a cluster.
+  Slave nodes, \gls{kubernetes} calls them only nodes, are responsible for executing and maintaining the actual application via an underlying container runtime.
+  Most of the time Docker~\cite{docker} is used.
+  The nodes also run \gls{kubernetes} components that manage cluster networking (\texttt{kube-proxy}) and interact with the container runtime and the master to monitor and manage the pods of the local node (\texttt{kubelet}).
+  % https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/
+  Pods are the smallest deployment unit in \gls{kubernetes} and consist of the application container (or multiple), connected resources, such as storages or network addresses, and the configuration options.
+  The container runtime, \texttt{kube-proxy} and \texttt{kubelet} form the \gls{kubernetes} runtime environment~\cite{kubernetes}.
+
+  The \gls{kubernetes} master components provide the cluster's control plane.
+  They typically run only on one node, which does not run application pods.
+  However, the components can be executed on any node in the cluster.
+  The master components include
+  (i) the \texttt{kube-apiserver} that exposes the control options to the user and other software,
+  (ii) an \texttt{etcd}~\cite{etcd} instance as store for all cluster data,
+  (iii) the \texttt{kube-scheduler}, which schedules newly created pods to the nodes in the cluster,
+  (iv) the \texttt{kube-controller-manager}, which runs node and pod controllers, and
+  (v) the \texttt{cloud-controller-manager} to interact with the underlying cloud providers~\cite{kubernetes}.
+
+  % https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/
+  For the declarative configuration and management of the application, \gls{kubernetes} employs the \gls{kubernetes} object model.
+  All entities of the \gls{kubernetes} runtime are represented as description objects.
+  The entirety of those objects represents the cluster state.
+  Each object consists of three parts:
+  (i) the object's metadata, such as name, version or labels,
+  (ii) the object \texttt{spec}, which describes the desired state for the object and is provided by the user, and
+  (iii) the object \texttt{status}, which describes the actual state of the object.
+  Users of \gls{kubernetes} therefore only provide the object's metadata and \texttt{spec} to declare the desired deployment of their containerized applications on nodes and policies around how the application should behave.
+  \Gls{kubernetes} will constantly update the \texttt{state} of the objects according to the observed cluster state and take corrective actions in the cluster to ensure that the cluster state matches the desired one declared in the objects' \texttt{spec}.
+
+  % https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  % should I describe labels as well?
