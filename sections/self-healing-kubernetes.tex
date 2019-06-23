@@ -2,7 +2,7 @@
 % !TeX encoding = UTF-8
 % !TeX spellcheck = en_US
 
-\section{\Gls{kubernetes}' self-healing capabilities}
+\section{\Gls{kubernetes}' self-healing capabilities}\label{sec:self-healing-kubernetes}
   In this section we will go through the self-healing capabilities available in \gls{kubernetes}.
   \gls{kubernetes}'s approach to self-healing is comparable to architecture-based self-healing~\cite{ToffettiMicroservices,DashofyArchitecture}.
   Its declarative object configuration model resembles the concept of a desired and actual runtime architecture of the managed application.
@@ -44,38 +44,40 @@
   The pod controller not only contains the self-healing logic for pods but also handles pod replication, rollout, and transparent pod placement on the available nodes.
 
   There are four different types of pod payloads, which require their own distinct failure handling, which is reflected in \gls{kubernetes} by different controller types:
-  Stateful applications, stateless applications, daemons, and jobs.
+  Stateless services, stateful services, daemons, and jobs.
   The next four sections cover the different aspects we have to consider for the failure handling of the application types.
 
+  \subsection{Self-healing of stateless services}
+    \begin{itemize}
+      \item Deployment definition via \texttt{Deployment} and the specification of replicas > 1 or with \texttt{ReplicaSet}
+      \item Failing pods will be recreated to match the desired number of replicas (node placement is transparent)
+    \end{itemize}
+
+  \subsection{Self-healing of stateful services}
+    \begin{itemize}
+      \item Deployment definition via \texttt{StatefulSet}: \url{https://kubernetes.io/docs/tutorials/stateful-application/basic-stateful-set/}
+      \item  Uses \texttt{PersistentVolumes} (provided by the underlying cloud platform, e.g AWS, GCP, OpenStack) for storage
+      \item Pods have a unique identity (name, network id, K8s configuration)
+      \item Failed pods will be rescheduled on other nodes with their identity (re-using the assigned persistent volume and network id)
+      \item A headless Service takes care of service discovery using SRV records and DNS (re-routing traffic to rescheduled pods on different nodes)
+      \item therefore, relies on the availability and fault-tolerance of the used persistent volumes
+    \end{itemize}
+
+  \subsection{Self-healing of daemons}
+    \begin{itemize}
+      \item Defined via \texttt{DaemonSets}: \url{https://kubernetes.io/docs/concepts/workloads/controllers/daemonset}
+      \item Ensures (monitors, restarts) that a copy of an application is run on each node (also on added or removed nodes)
+      \item no real recovery if a node fails. Relies on manual action to replace the failed node. Then the \texttt{DaemonSet} will take care of creating the daemon pod on the newly added node.
+    \end{itemize}
+
+  \subsection{Self-healing of jobs}
+    \begin{itemize}
+      \item one-time jobs, terminating application
+    \end{itemize}
+
   \begin{enumerate}
-    \item self-healing properties available in \gls{kubernetes} via controllers:
-          \begin{itemize}
-            \item recovery of stateful applications:
-              \begin{itemize}
-                \item Deployment definition via \texttt{StatefulSet}: \url{https://kubernetes.io/docs/tutorials/stateful-application/basic-stateful-set/}
-                \item  Uses \texttt{PersistentVolumes} (provided by the underlying cloud platform, e.g AWS, GCP, OpenStack) for storage
-                \item Pods have a unique identity (name, network id, K8s configuration)
-                \item Failed pods will be rescheduled on other nodes with their identity (re-using the assigned persistent volume and network id)
-                \item A headless Service takes care of service discovery using SRV records and DNS (re-routing traffic to rescheduled pods on different nodes)
-                \item therefore, relies on the availability and fault-tolerance of the used persistent volumes
-              \end{itemize}
-
-            \item recovery of stateless applications:
-              \begin{itemize}
-                \item Deployment definition via \texttt{Deployment} and the specification of replicas > 1 or with \texttt{ReplicaSet}
-                \item Failing pods will be recreated to match the desired number of replicas (node placement is transparent)
-              \end{itemize}
-
-            \item daemons: applications per node
-              \begin{itemize}
-                \item Defined via \texttt{DaemonSets}: \url{https://kubernetes.io/docs/concepts/workloads/controllers/daemonset}
-                \item Ensures (monitors, restarts) that a copy of an application is run on each node (also on added or removed nodes)
-                \item no real recovery if a node fails. Relies on manual action to replace the failed node. Then the \texttt{DaemonSet} will take care of creating the daemon pod on the newly added node.
-              \end{itemize}
-            \item one-time jobs, terminating application
-          \end{itemize}
     \item \textbf{the three \enquote{self-healing components}:}
-    \item better put them in the discussion chapter?
+    \item better put them in the discussion chapter? or in conclusion?
     \item fault-tolerant through replication and isolation to ensure system availability:
       \begin{itemize}
       \item \gls{kubernetes} is a distributed system, only one master per default, but master components can be placed on all nodes

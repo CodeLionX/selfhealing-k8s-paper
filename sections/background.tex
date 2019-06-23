@@ -2,7 +2,20 @@
 % !TeX encoding = UTF-8
 % !TeX spellcheck = en_US
 
-\section{Self-Healing}
+\section{Self-Healing}\label{sec:self-healing}
+  Self-healing is an integral part of self-adaptive systems and the focus of this paper.
+  It combines properties of
+  (i) fault-tolerant systems, which handle transient failures and mask permanent ones to ensure system availability,
+  (ii) self-stabilizing systems, which are non-fault masking and converge to the legal state in a finite amount of time, and 
+  (iii) survivable systems, which maintain essential services and recover non-essential ones after intrusions have been dealt with~\cite{PsaierSurvey}.
+  A widely-used definition for self-healing systems is from \citeauthor{Ghosh}~\cite{Ghosh}:
+
+  \begin{quote}
+    The key focus [...] is that a self-healing system should recover from the abnormal (or \enquote{unhealthy}) state and return to the normative (\enquote{healthy}) state, and function as it was prior to disruption.
+  \end{quote}
+
+  This definition is very broad, but one can argue that the key aspect of self-healing systems are recovery oriented functionalities that bring the system back to the healthy state, which neither sole fault-tolerant systems nor sole survivable systems encompass~\cite{PsaierSurvey}.
+
   Like in an autonomous system, the main component in a self-healing system is the self-healing manager.
   It runs a control loop with three stages that is a reduced version of the autonomic control loop, also referred to as MAPE-K loop~\cite{ibm_autonomic}.
   The self-healing loop consists of the following three main stages~\cite{PsaierSurvey}:
@@ -33,7 +46,7 @@
   Using third party services or services provided by the infrastructure provider could lead to vendor lock-in.
   There are also open-source alternatives that can be used as middleware between cloud infrastructure and the application, such as \gls{kubernetes}.
 
-\section[Kubernetes]{\gls{kubernetes}}
+\section[Kubernetes]{\gls{kubernetes}}\label{sec:kubernetes}
   % https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/
   \Gls{kubernetes} is an open-source platform for automating and managing distributed software in the cloud.
   It heavily relies on container technology and supports the declarative configuration of the managed containers.
@@ -67,7 +80,7 @@
   (ii) the object \texttt{spec}, which describes the desired state for the object and is provided by the user, and
   (iii) the object \texttt{status}, which describes the actual state of the object.
   Users of \gls{kubernetes} therefore only provide the object's metadata and \texttt{spec} to declare the desired deployment of their containerized applications on nodes and policies around how the application should behave.
-  \Gls{kubernetes} will constantly update the \texttt{state} of the objects according to the observed cluster state and take corrective actions in the cluster to ensure that the cluster state matches the desired one declared in the objects' \texttt{spec}.
+  \Gls{kubernetes} will constantly update the \texttt{state} of the objects according to the observed cluster state and take corrective actions in the cluster to ensure that the cluster state matches the desired one declared in the objects' \texttt{spec}~\cite{kubernetes}.
 
   % https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   % should I describe labels as well?
