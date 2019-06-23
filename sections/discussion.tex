@@ -7,7 +7,7 @@
     \item requires containerized microservice application
     \item code must support scaling and dynamic communication
     \item provider of \texttt{PersistentVolumes} must ensure their availability and fault-tolerance
-    \item to deal with a node failure, remaining nodes must have enough spare capacity to host the failed pods
+    \item to deal with a node failure, remaining nodes must have enough spare capacity to host the failed pods or eviction kicks in
     \item with replication factor 1, there are down times during re-creation of the pod on another node
     \item limitations
     \begin{itemize}
@@ -28,4 +28,7 @@
       \item rich API to retrieve current system state
     \end{itemize}
     \item interesting facts and insights
+      \begin{itemize}
+        \item nothing not mentioned yet
+      \end{itemize}
   \end{enumerate}
