@@ -46,22 +46,27 @@
   Those tools detect disruptions, diagnose failures and recover from them by applying an appropriate strategy~\cite{PsaierSurvey}.
   \Gls{kubernetes} is one of those tools.
 
+  \begin{itemize}
+    \item related work: industry cloud tools that have self-healing capabilities
+    \item \gls{kubernetes}
+    \item Apache Mesos and Mesosphere: periodic health checks to ensure a leader is available in the cluster all the time, replacement of died nodes.
+    \item services from the infrastructure provider: Amazon Auto Scaling (\url{https://aws.amazon.com/de/autoscaling/}), Google Cloud Managed Instance Groups (\url{https://cloud.google.com/compute/docs/instance-groups/}, recreation of VM-instances when they crash or stop, recreation of instances that do not respond to application-defined health-checks)
+  \end{itemize}
+
+  \begin{quote}
+    In the pre-cloud days, this would have been pretty manual, some poor sap of an engineer would have to nurse a bare metal or VM back to health.
+    Now, with cloud-based abstractions, individual compute units are much more expendable.
+    We can just take them down and replace them with new ones.
+  \end{quote}
+
   % contribution
-  In this paper, we compare the solutions and approaches proposed in self-healing research literature with the way \gls{kubernetes} implements self-healing capabilities.
+  In this paper, we compare the solutions and approaches proposed in self-healing research literature with the way \gls{kubernetes} implements self-healing capabilities for microservices in the cloud.
   We show, which self-healing concepts are already implemented by \gls{kubernetes} and where there are still open issues and limitations.
 
   % outline
   The rest of this paper is structures as follows:
-  \Cref{sec:self-healing} introduces the concept of self-healing systems and summarizes recent research literature in this area.
+  \Cref{sec:self-healing} introduces the concept of self-healing systems, discusses self-healing challenges in the cloud environment, and summarizes recent research literature in this area.
   In \cref{sec:kubernetes}, we quickly present base concepts and the architecture of \gls{kubernetes}.
   Using those base concepts, we can then explain, how \gls{kubernetes} implements self-healing capabilities in \cref{sec:self-healing-kubernetes}.
   The discussion of benefits and limitations of \gls{kubernetes}' self-healing capabilities follows in \cref{sec:discussion}.
-  Before we conclude the paper in \cref{sec:conclusion}, we briefly go through the related work in \cref{sec:related-work}.
-
-  % where should I put this ...
-  \textbf{Where should I put this paragraph?}
-  While systems and software components can fail in various ways and research has come up with general failure classifications and resolutions~\cite[Tab.~1]{PsaierSurvey}, failures in cloud environments can be reduced to one failure: a node or component is detected unreachable.
-  Although an unreachable node can have different root causes on the infrastructure level, the impact on the system is the same and we have no control about the infrastructure in a cloud deployment.
-  This means that we have to find other ways besides repairing the infrastructure to heal from those failures.
-  Node failures can be detected via heartbeat messages or latency metrics and a common recovery strategy used is the restart of the software that was running on the node on another node.
-  % ...
+  We conclude this paper in \cref{sec:conclusion}.

@@ -26,6 +26,12 @@
     \item[Recover] In the recovery phase the manager applies the strategies to the system while he avoids any unpredictable side effects.
   \end{description}
 
+  \begin{figure}
+    \centering
+    \caption{Condensed autonomic control loop as the self-healing loop}
+    \label{fig:self-healing-loop}
+  \end{figure}
+
   These three stages reflect the definition of self-healing.
   There are different ways, how a software system can be equipped with the above mentioned self-healing capabilities.
 
@@ -34,10 +40,6 @@
   This can be an advantage as the application is a white box and the self-healing logic can use detailed status information and even domain knowledge for detection, analysis and recovery.
   At the other hand, this also means that the healing logic is tied to the application increasing coupling and violating the separation of concerns principle.
   If the application starves the self-healing manager may starve as well.
-  \citeauthor{ToffettiMicroservices} propose such a system for a microservice architecture.
-  They leverage standard methods from distributed systems (\ie consensus algorithms) to assign self-management (includes self-healing) functionality to some nodes of the distributed application.
-  The selected nodes form a hierarchy and perform different parts of the self-management logic.
-  This means that the self-management logic is distributed in the cluster to overcome the connectedness to the application code.
 
   The second approach is an external self-healing manager provided as an infrastructural component or as third-party service.
   The self-healing logic runs in isolation from the application code and can therefore treat the application only as a black box and has to use external metrics to judge the application's health.
@@ -45,6 +47,63 @@
   The external management logic has to be themselves resilient, fault-tolerant, and scalable for being able to heal the application.
   Using third party services or services provided by the infrastructure provider could lead to vendor lock-in.
   There are also open-source alternatives that can be used as middleware between cloud infrastructure and the application, such as \gls{kubernetes}.
+
+  \subsection{Architecture-based self-healing}
+  \begin{itemize}
+    \item introduce related work: research approaches to self-healing:
+    \item \cite{DashofyArchitecture}
+    \begin{itemize}
+      \item architecture-based approach
+      \item $\rightarrow$ repairs are done on the level of software components or connectors
+      \item external to application
+      \item targets event-based software architectures
+    \end{itemize}
+    \item This approach
+    \begin{itemize}
+      \item microservice container orchestrator approach
+      \item $\rightarrow$ repairs are done on container-level
+      \item external to application (\gls{kubernetes})
+      \item targets microservice architectures deployed in cloud environments using containers and \gls{kubernetes}
+    \end{itemize}
+  \end{itemize}
+
+\subsection{Self-healing challenges in cloud environments}
+  While systems and software components can fail in various ways and research has come up with general failure classifications and resolutions~\cite[Tab.~1]{PsaierSurvey}, failures in cloud environments can be reduced to one failure: a node or component is detected unreachable.
+  Although an unreachable node can have different root causes on the infrastructure level, the impact on the system is the same and we have no control about the infrastructure in a cloud deployment.
+  This means that we have to find other ways besides repairing the infrastructure to heal from those failures.
+  Node failures can be detected via heartbeat messages or latency metrics and a common recovery strategy used is the restart of the software that was running on the node on another node.
+
+  \begin{itemize}
+    \item Reactive Manifesto~\cite{reactivemanifesto} asks for more resilient and responsive systems.
+    The resilience is achieved by replication, containment, isolation, and delegation.
+    Recovery should be handled by an external component.
+    This could be a self-healing component.
+    \item \cite{StackCloud}
+      \begin{itemize}
+        \item hierarchical approach
+        \item layered master-slave architecture to provide flexibility and high availability
+        \item targets decentralized cloud architectures
+      \end{itemize}
+    \item \cite{gru}
+      \begin{itemize}
+      \item similar to this approach, but they have developed their own container orchestration tool, called Gru, instead of using \gls{kubernetes}
+      \item also targets microservice architectures deployed in containers
+    \end{itemize}
+  \end{itemize}
+
+\subsection{Self-healing microservices}
+  \citeauthor{ToffettiMicroservices} propose such (application with built-in self-healing logic) a system for a microservice architecture.
+  They leverage standard methods from distributed systems (\ie consensus algorithms) to assign self-management (includes self-healing) functionality to some nodes of the distributed application.
+  The selected nodes form a hierarchy and perform different parts of the self-management logic.
+  This means that the self-management logic is distributed in the cluster to overcome the connectedness to the application code.
+
+  \begin{itemize}
+    \item \cite{ToffettiMicroservices}
+    \item architecture-based approach
+    \item self-managing microservice applications
+    \item within application
+    \item targets microservice applications
+  \end{itemize}
 
 \section[Kubernetes]{\gls{kubernetes}}\label{sec:kubernetes}
   % https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/
@@ -60,6 +119,12 @@
   % https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/
   Pods are the smallest deployment unit in \gls{kubernetes} and consist of the application container (or multiple), connected resources, such as storages or network addresses, and the configuration options.
   The container runtime, \texttt{kube-proxy} and \texttt{kubelet} form the \gls{kubernetes} runtime environment~\cite{kubernetes}.
+
+  \begin{figure}
+    \centering
+    \caption{\Gls{kubernetes} architecture}
+    \label{fig:kubernetes-architecture}
+  \end{figure}
 
   The \gls{kubernetes} master components provide the cluster's control plane.
   They typically run only on one node, which does not run application pods.
