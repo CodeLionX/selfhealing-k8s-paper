@@ -73,6 +73,12 @@
   This means that we have to find other ways besides repairing the infrastructure to heal from those failures.
   Node failures can be detected via heartbeat messages or latency metrics and a common recovery strategy used is the restart of the software that was running on the node on another node.
 
+b  \begin{quote}
+    In the pre-cloud days, this would have been pretty manual, some poor sap of an engineer would have to nurse a bare metal or VM back to health.
+    Now, with cloud-based abstractions, individual compute units are much more expendable.
+    We can just take them down and replace them with new ones.
+  \end{quote}
+
   \begin{itemize}
     \item Reactive Manifesto~\cite{reactivemanifesto} asks for more resilient and responsive systems.
     The resilience is achieved by replication, containment, isolation, and delegation.

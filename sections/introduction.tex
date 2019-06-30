@@ -21,7 +21,7 @@
   % orchestration --> docker and kubernetes
   For those complex distributed software systems consisting of hundreds of microservices, deployment and management gets more complex as well.
   The service management can be simplified by executing the microservices isolated from each other in containers, such as Docker containers~\cite{docker}.
-  Container orchestration tools, such as \gls{kubernetes}~\cite{kubernetes}, can further be used for the deployment, scaling, and management of the containerized distributed microservice applications.
+  Container orchestration tools, such as \gls{kubernetes}~\cite{kubernetes}, can further be used to deploy, scale, and manage containerized distributed microservice applications.
 
   % self-adaptive systems
   The increasing complexity of modern software systems motivated the development of self-adaptive systems.
@@ -44,20 +44,13 @@
   Therefore, they have to be fault tolerant, mask temporary failures, and recover from them in a finite amount of time to reach the healthy system state again.
   In cloud environments, self-healing techniques are already used in the form of approaches and tools that try to achieve continuous availability for cloud services.
   Those tools detect disruptions, diagnose failures and recover from them by applying an appropriate strategy~\cite{PsaierSurvey}.
-  \Gls{kubernetes} is one of those tools.
-
-  \begin{itemize}
-    \item related work: industry cloud tools that have self-healing capabilities
-    \item \gls{kubernetes}
-    \item Apache Mesos and Mesosphere: periodic health checks to ensure a leader is available in the cluster all the time, replacement of died nodes.
-    \item services from the infrastructure provider: Amazon Auto Scaling (\url{https://aws.amazon.com/de/autoscaling/}), Google Cloud Managed Instance Groups (\url{https://cloud.google.com/compute/docs/instance-groups/}, recreation of VM-instances when they crash or stop, recreation of instances that do not respond to application-defined health-checks)
-  \end{itemize}
-
-  \begin{quote}
-    In the pre-cloud days, this would have been pretty manual, some poor sap of an engineer would have to nurse a bare metal or VM back to health.
-    Now, with cloud-based abstractions, individual compute units are much more expendable.
-    We can just take them down and replace them with new ones.
-  \end{quote}
+  As an example, consider Apache Mesos~\cite{mesos} and Mesosphere~\cite{mesosphere}.
+  They perform periodic health checks to ensure a leader is available in the cluster all the time.
+  This means they can detect failing nodes and replace them automatically.
+  Other tools are located in the infrastructure layer:
+  Amazon Auto Scaling~\cite{amazon-auto-scaling} and Google Cloud Managed Instance Groups~\cite{gcp-mig} monitor VM instances and automatically recreate them when they crash or stop.
+  In addition, both tools allow the user to specify application health checks.
+  However, in this paper we will focus on \gls{kubernetes}.
 
   % contribution
   In this paper, we compare the solutions and approaches proposed in self-healing research literature with the way \gls{kubernetes} implements self-healing capabilities for microservices in the cloud.
