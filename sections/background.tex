@@ -54,20 +54,20 @@
   In the past most self-healing capabilities were included in the application code itself.
   This has the downside that the self-healing adaption engines and rules are tightly coupled to the application code and can't be reused.
   Researchers have therefore developed ways to generalize self-healing mechanisms.
-  One approach are architecture-based self-healing system, in which an external self-healing manager performs repairs on the level of software components and connectors of the monitored system~\cite{DashofyArchitecture}.
+  One approach are architecture-based self-healing systems, in which external self-healing managers perform repairs on the level of software components and connectors of the monitored systems~\cite{DashofyArchitecture}.
   The assumption of those approaches is that the component boundaries are the most loosely coupled points in the software system and can be reconfigured to allow changes in the architecture during runtime.
 
   \citeauthor{DashofyArchitecture} present the infrastructure to develop and run an architecture-based self-healing system that focuses on event-based software architectures in~\cite{DashofyArchitecture}.
   They chose event-based architectures, because all included components can only communicate via events and show a significant degree of autonomy.
-  This reduces coupling of the components and makes changes from the outside to the system possible~\cite{DashofyArchitecture}.
+  This reduces coupling of the components and makes changes from the outside to the system possible.
 
 \subsection{Self-healing microservices}
   Microservice architectures take isolation of software components to the next level and improve the autonomy of the components (services).
   This makes applying repairs from the outside of the application easier, because services are decoupled, autonomous, and scalable and service boundaries are well-defined.
-  External self-healing managers can monitor the microservices of the application and apply repairs to the failing or misbehaving ones by replacing the service with another one and rerouting the messages to it.
-  This is where the self-healing capabilities of the aforementioned cloud tools (refer to \cref{sec:introduction}) can be used.
+  External self-healing managers can monitor the microservices of the application and apply repairs to the failing or misbehaving ones by replacing the service with another one and rerouting the messages to the new instance.
+  This is where the self-healing capabilities of the aforementioned cloud tools (refer to \cref{sec:introduction}) and \gls{kubernetes} can be used.
 
-  In contrast to external self-healing managers, \citeauthor{ToffettiMicroservices} propose a self-healing system with self-healing logic built into a microservice application.
+  In contrast to external self-healing managers, \citeauthor{ToffettiMicroservices} propose a self-healing system with the self-healing logic built into a microservice application.
   They leverage standard methods from distributed systems (\ie consensus algorithms) to assign self-management (includes self-healing) functionality to some nodes of the distributed application.
   The selected nodes form a hierarchy and perform different parts of the self-management logic.
   This means that the self-management logic is distributed in the cluster to overcome the connectedness to the application code~\cite{ToffettiMicroservices}.
@@ -85,6 +85,7 @@
   \end{quote}
 
   \begin{itemize}
+    \item self-healing manager must be resilient itself
     \item Reactive Manifesto~\cite{reactivemanifesto} asks for more resilient and responsive systems.
     The resilience is achieved by replication, containment, isolation, and delegation.
     Recovery should be handled by an external component.
@@ -109,8 +110,8 @@
   \Gls{kubernetes} was developed by Google and is open-source software since 2014~\cite{kubernetes}.
 
   % https://kubernetes.io/docs/concepts/overview/components/
-  \Gls{kubernetes} is build on top of existing \gls{paas} solutions and consists of a master-slave architecture forming a cluster.
-  Slave nodes, \gls{kubernetes} calls them only nodes, are responsible for executing and maintaining the actual application via an underlying container runtime.
+  \Gls{kubernetes} is build on top of existing \gls{paas} solutions and consists of a master-slave architecture, which is depicted in \cref{fig:kubernetes-architecture}, forming a cluster.
+  Slave nodes, \gls{kubernetes} calls them only \enquote{nodes}, are responsible for executing and maintaining the actual application via an underlying container runtime.
   Most of the time Docker~\cite{docker} is used.
   The nodes also run \gls{kubernetes} components that manage cluster networking (\texttt{kube-proxy}) and interact with the container runtime and the master to monitor and manage the pods of the local node (\texttt{kubelet}).
   % https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/
@@ -125,7 +126,7 @@
   \end{figure}
 
   The \gls{kubernetes} master components provide the cluster's control plane.
-  They typically run only on one node, which does not run application pods.
+  As shown in the upper third of \cref{fig:kubernetes-architecture}, they typically run only on one node, which does not run application pods.
   However, the components can be executed on any node in the cluster.
   The master components include
   (i) the \texttt{kube-apiserver} that exposes the control options to the user and other software,
