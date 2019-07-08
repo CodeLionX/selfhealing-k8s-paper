@@ -28,6 +28,7 @@
 
   \begin{figure}
     \centering
+    \includegraphics[width=\linewidth]{reduced-control-loop}
     \caption{Condensed autonomic control loop as the self-healing loop}
     \label{fig:self-healing-loop}
   \end{figure}
@@ -73,7 +74,7 @@
   This means that we have to find other ways besides repairing the infrastructure to heal from those failures.
   Node failures can be detected via heartbeat messages or latency metrics and a common recovery strategy used is the restart of the software that was running on the node on another node.
 
-b  \begin{quote}
+  \begin{quote}
     In the pre-cloud days, this would have been pretty manual, some poor sap of an engineer would have to nurse a bare metal or VM back to health.
     Now, with cloud-based abstractions, individual compute units are much more expendable.
     We can just take them down and replace them with new ones.
@@ -128,6 +129,7 @@ b  \begin{quote}
 
   \begin{figure}
     \centering
+    \includegraphics[width=\linewidth]{k8s-architecture}
     \caption{\Gls{kubernetes} architecture}
     \label{fig:kubernetes-architecture}
   \end{figure}
