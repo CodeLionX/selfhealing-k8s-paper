@@ -26,15 +26,16 @@
     \item[Recover] In the recovery phase the manager applies the strategies to the system while he avoids any unpredictable side effects.
   \end{description}
 
+  These three stages reflect the definition of self-healing.
+  \Cref{fig:self-healing-loop} shows the mapping of those stages to the MAPE-K control loop.
+  There are two different ways, how a software system can be equipped with the above mentioned self-healing capabilities:
+
   \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{reduced-control-loop}
     \caption{Condensed autonomic control loop as the self-healing loop}
     \label{fig:self-healing-loop}
   \end{figure}
-
-  These three stages reflect the definition of self-healing.
-  There are different ways, how a software system can be equipped with the above mentioned self-healing capabilities.
 
   The first approach is a software application with built-in self-healing logic.
   This means that the self-healing manager is within the application code and is able to access internal state and mechanisms.
@@ -45,31 +46,34 @@
   The second approach is an external self-healing manager provided as an infrastructural component or as third-party service.
   The self-healing logic runs in isolation from the application code and can therefore treat the application only as a black box and has to use external metrics to judge the application's health.
   It's the current state of the art for monitoring, health management and scaling logic~\cite{ToffettiMicroservices}.
-  The external management logic has to be themselves resilient, fault-tolerant, and scalable for being able to heal the application.
+  The external management logic has to be itself resilient, fault-tolerant, and scalable for being able to heal the application.
   Using third party services or services provided by the infrastructure provider could lead to vendor lock-in.
-  There are also open-source alternatives that can be used as middleware between cloud infrastructure and the application, such as \gls{kubernetes}.
+  There are also open-source alternatives that include self-healing capabilities and can be used as middleware between cloud infrastructure and the application, such as \gls{kubernetes} or Mesosphere.
 
-  \subsection{Architecture-based self-healing}
-  \begin{itemize}
-    \item introduce related work: research approaches to self-healing:
-    \item \cite{DashofyArchitecture}
-    \begin{itemize}
-      \item architecture-based approach
-      \item $\rightarrow$ repairs are done on the level of software components or connectors
-      \item external to application
-      \item targets event-based software architectures
-    \end{itemize}
-    \item This approach
-    \begin{itemize}
-      \item microservice container orchestrator approach
-      \item $\rightarrow$ repairs are done on container-level
-      \item external to application (\gls{kubernetes})
-      \item targets microservice architectures deployed in cloud environments using containers and \gls{kubernetes}
-    \end{itemize}
-  \end{itemize}
+\subsection{Architecture-based self-healing}
+  In the past most self-healing capabilities were included in the application code itself.
+  This has the downside that the self-healing adaption engines and rules are tightly coupled to the application code and can't be reused.
+  Researchers have therefore developed ways to generalize self-healing mechanisms.
+  One approach are architecture-based self-healing system, in which an external self-healing manager performs repairs on the level of software components and connectors of the monitored system~\cite{DashofyArchitecture}.
+  The assumption of those approaches is that the component boundaries are the most loosely coupled points in the software system and can be reconfigured to allow changes in the architecture during runtime.
+
+  \citeauthor{DashofyArchitecture} present the infrastructure to develop and run an architecture-based self-healing system that focuses on event-based software architectures in~\cite{DashofyArchitecture}.
+  They chose event-based architectures, because all included components can only communicate via events and show a significant degree of autonomy.
+  This reduces coupling of the components and makes changes from the outside to the system possible~\cite{DashofyArchitecture}.
+
+\subsection{Self-healing microservices}
+  Microservice architectures take isolation of software components to the next level and improve the autonomy of the components (services).
+  This makes applying repairs from the outside of the application easier, because services are decoupled, autonomous, and scalable and service boundaries are well-defined.
+  External self-healing managers can monitor the microservices of the application and apply repairs to the failing or misbehaving ones by replacing the service with another one and rerouting the messages to it.
+  This is where the self-healing capabilities of the aforementioned cloud tools (refer to \cref{sec:introduction}) can be used.
+
+  In contrast to external self-healing managers, \citeauthor{ToffettiMicroservices} propose a self-healing system with self-healing logic built into a microservice application.
+  They leverage standard methods from distributed systems (\ie consensus algorithms) to assign self-management (includes self-healing) functionality to some nodes of the distributed application.
+  The selected nodes form a hierarchy and perform different parts of the self-management logic.
+  This means that the self-management logic is distributed in the cluster to overcome the connectedness to the application code~\cite{ToffettiMicroservices}.
 
 \subsection{Self-healing challenges in cloud environments}
-  While systems and software components can fail in various ways and research has come up with general failure classifications and resolutions~\cite[Tab.~1]{PsaierSurvey}, failures in cloud environments can be reduced to one failure: a node or component is detected unreachable.
+  While systems and software components can fail in various ways and research has come up with general failure classifications and resolutions~\cite[Tab.~1]{PsaierSurvey} for any software systems, failures in cloud environments can be reduced to one failure class: a node or component is detected unreachable.
   Although an unreachable node can have different root causes on the infrastructure level, the impact on the system is the same and we have no control about the infrastructure in a cloud deployment.
   This means that we have to find other ways besides repairing the infrastructure to heal from those failures.
   Node failures can be detected via heartbeat messages or latency metrics and a common recovery strategy used is the restart of the software that was running on the node on another node.
@@ -96,20 +100,6 @@
       \item similar to this approach, but they have developed their own container orchestration tool, called Gru, instead of using \gls{kubernetes}
       \item also targets microservice architectures deployed in containers
     \end{itemize}
-  \end{itemize}
-
-\subsection{Self-healing microservices}
-  \citeauthor{ToffettiMicroservices} propose such (application with built-in self-healing logic) a system for a microservice architecture.
-  They leverage standard methods from distributed systems (\ie consensus algorithms) to assign self-management (includes self-healing) functionality to some nodes of the distributed application.
-  The selected nodes form a hierarchy and perform different parts of the self-management logic.
-  This means that the self-management logic is distributed in the cluster to overcome the connectedness to the application code.
-
-  \begin{itemize}
-    \item \cite{ToffettiMicroservices}
-    \item architecture-based approach
-    \item self-managing microservice applications
-    \item within application
-    \item targets microservice applications
   \end{itemize}
 
 \section[Kubernetes]{\gls{kubernetes}}\label{sec:kubernetes}
