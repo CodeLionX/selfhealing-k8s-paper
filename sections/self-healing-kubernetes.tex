@@ -3,14 +3,11 @@
 % !TeX spellcheck = en_US
 
 \section{\Gls{kubernetes}' self-healing capabilities}\label{sec:self-healing-kubernetes}
-  \begin{itemize}
-    \item section structure:
-    \item What to expect from this chapter?
-    \item Self-healing capabilities of \gls{kubernetes}
-    \item Comparison to classical self-healing systems (similarities and differences)
-  \end{itemize}
-
   In this section we will go through the self-healing capabilities available in \gls{kubernetes}.
+  We will start with a short overview how \gls{kubernetes} approaches self-healing and what failure types exist in \cref{sec:self-healing-kubernetes:overview}.
+  We then explain, how \gls{kubernetes} implements the three properties of self-healing systems: fault-tolerant in \cref{sec:self-healing-kubernetes:fault-tolerant}, self-stabilizing in \cref{sec:self-healing-kubernetes:self-stabilizing} and survivable in \cref{sec:self-healing-kubernetes:survivable}.
+
+\subsection{Overview}\label{sec:self-healing-kubernetes:overview}
   \gls{kubernetes}'s approach to self-healing is comparable to architecture-based self-healing~\cite{ToffettiMicroservices,DashofyArchitecture}.
   Its declarative object configuration model resembles the concept of a desired and actual runtime architecture of the managed application.
   The user of \gls{kubernetes}, which can also be another software program as the \gls{kubernetes} API is machine-readable, can define the desired system architecture as the \texttt{spec} part of the deployment configuration.
@@ -19,14 +16,15 @@
   \Gls{kubernetes} then internally creates the \texttt{state} part of the objects that represents the current architecture of the running components and updates them in \texttt{etcd}.
   Based on those two representations corrective measures can then be taken by \gls{kubernetes} fully automatically to let the actual state of the system converge to the desired one.
 
+% two levels of disruptions / failures
   There are two levels of disruptions that can occur in a \gls{kubernetes} deployment: Container failure and pod disruptions.
   % https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/\#restart-policy
   Containers are runtime artifacts defined by users and can therefore fail or crash during execution.
   Those container failures are captured by the restart policy of their pod objects.
-  When the restart policy is set to \textit{Always} or \textit{OnFailure}, failing containers are automatically restarted by the \texttt{kubelet} component with an exponential back-off strategy.
+  When the restart policy is set to \textit{Always} or \textit{OnFailure}, failing containers are automatically restarted by the local \texttt{kubelet} component with an exponential back-off strategy.
 
-  In contrast to containers, pods do not disappear until someone (the user or a \gls{kubernetes} component) destroys them or there is a unavoidable system error.
-  \Gls{kubernetes} considers the following involuntary disruptions~\cite{kubernetes}:
+  In contrast to containers, pods do not disappear until someone (the user or a \gls{kubernetes} component) destroys them or there is an unavoidable system error.
+  \Gls{kubernetes} considers the following involuntary disruptions for pods~\cite{kubernetes}:
 
   \begin{itemize}
     \item a hardware failure of the physical machine backing the node
@@ -37,7 +35,22 @@
   \end{itemize}
 
   % https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/\#pod-lifetime
-  For all those cases \gls{kubernetes} sets the phase of all the pods that where running on the failed node to \textit{Failed}, so the self-healing logic can take care of those failures.
+  For all those cases, the \gls{kubernetes} nodes are monitored by \textit{node-controllers} run by the \textit{controller-manager} (see \cref{fig:kubernetes-architecture}).
+  They detect node failures through a heartbeat-based failure detector and set the phase of all pods that where running on the failed node to \textit{Failed}, so the self-healing logic can take care of those failures.
+
+  \Gls{kubernetes}' self-healing capabilities are implemented through different functionalities.
+  The following three sections explain how \gls{kubernetes} implements the three properties of self-healing systems introduced in \cref{sec:self-healing} with services, \glspl{pod controller}, \glspl{priority class}, and \glspl{pdb}.
+
+\subsection{Fault-tolerant}\label{sec:self-healing-kubernetes:fault-tolerant}
+  fault-tolerant through replication and isolation to ensure system availability:
+  \begin{itemize}
+    \item \gls{kubernetes} is a distributed system, only one master per default, but master components can be placed on all nodes
+    \item \gls{kubernetes} uses pods and containers for isolation and containment
+    \item to ensure application availability: application must make use of provided features and support distributed deployment (especially replication)
+  \end{itemize}
+
+\subsection{Self-stabilizing}\label{sec:self-healing-kubernetes:self-stabilizing}
+  self-stabilizing through pod controllers that continuously monitor system state and take actions to transition to desired state
 
   Pods can be created manually, but this means one has to take care of pod failures as well.
   A better solution is to use pod controllers.
@@ -54,51 +67,43 @@
   Stateless services, stateful services, daemons, and jobs.
   The next four sections cover the different aspects we have to consider for the failure handling of the application types.
 
-  \subsection{Self-healing of stateless services}
-    \begin{itemize}
-      \item Deployment definition via \texttt{Deployment} and the specification of replicas > 1 or with \texttt{ReplicaSet}
-      \item Failing pods will be recreated to match the desired number of replicas (node placement is transparent)
-    \end{itemize}
-
-  \subsection{Self-healing of stateful services}
-    \begin{itemize}
-      \item Deployment definition via \texttt{StatefulSet}: \url{https://kubernetes.io/docs/tutorials/stateful-application/basic-stateful-set/}
-      \item  Uses \texttt{PersistentVolumes} (provided by the underlying cloud platform, e.g AWS, GCP, OpenStack) for storage
-      \item Pods have a unique identity (name, network id, K8s configuration)
-      \item Failed pods will be rescheduled on other nodes with their identity (re-using the assigned persistent volume and network id)
-      \item A headless Service takes care of service discovery using SRV records and DNS (re-routing traffic to rescheduled pods on different nodes)
-      \item therefore, relies on the availability and fault-tolerance of the used persistent volumes
-    \end{itemize}
-
-  \subsection{Self-healing of daemons}
-    \begin{itemize}
-      \item Defined via \texttt{DaemonSets}: \url{https://kubernetes.io/docs/concepts/workloads/controllers/daemonset}
-      \item Ensures (monitors, restarts) that a copy of an application is run on each node (also on added or removed nodes)
-      \item no real recovery if a node fails. Relies on manual action to replace the failed node. Then the \texttt{DaemonSet} will take care of creating the daemon pod on the newly added node.
-    \end{itemize}
-
-  \subsection{Self-healing of jobs}
-    \begin{itemize}
-      \item one-time jobs, terminating application
-    \end{itemize}
-
-  \begin{enumerate}
-    \item \textbf{the three \enquote{self-healing components}:}
-    \item better put them in the discussion chapter? or in conclusion?
-    \item fault-tolerant through replication and isolation to ensure system availability:
+  \begin{description}
+    \item[Self-healing of stateless services]\hfill\\
       \begin{itemize}
-      \item \gls{kubernetes} is a distributed system, only one master per default, but master components can be placed on all nodes
-      \item \gls{kubernetes} uses pods and containers for isolation and containment
-      \item to ensure application availability: application must make use of provided features and support distributed deployment (especially replication)
-    \end{itemize}
-    \item self-stabilizing through pod controllers that continuously monitor system state and take actions to transition to desired state
-    \item survivable through: user can assign priority classes to critical pods and is able to create pod disruption budgets that limit the number of replicated pods that can are evicted simultaneously
-      \begin{itemize}
-        \item \url{https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/}
-        \item we can define priority classes and assign pods to those
-        \item pod priority will affect scheduling order (higher priority pods first)
-        \item under resource pressure, higher priority nodes that are created and scheduled will evict lower priority pods (with their graceful termination period after which they are killed)
-        \item pod disruption budgets can be specified to limit the number of replicated pods that are simultaneously down from voluntary disruption (draining, and also preemption)\footnote{\url{https://kubernetes.io/docs/concepts/workloads/pods/disruptions/\#how-disruption-budgets-work}}
-        \item pod disruption budgets are considered only on best effort basis during preemption
+        \item Deployment definition via \texttt{Deployment} and the specification of replicas > 1 or with \texttt{ReplicaSet}
+        \item Failing pods will be recreated to match the desired number of replicas (node placement is transparent)
       \end{itemize}
-  \end{enumerate}
+
+    \item[Self-healing of stateful services]\hfill\\
+      \begin{itemize}
+        \item Deployment definition via \texttt{StatefulSet}: \url{https://kubernetes.io/docs/tutorials/stateful-application/basic-stateful-set/}
+        \item  Uses \texttt{PersistentVolumes} (provided by the underlying cloud platform, e.g AWS, GCP, OpenStack) for storage
+        \item Pods have a unique identity (name, network id, K8s configuration)
+        \item Failed pods will be rescheduled on other nodes with their identity (re-using the assigned persistent volume and network id)
+        \item A headless Service takes care of service discovery using SRV records and DNS (re-routing traffic to rescheduled pods on different nodes)
+        \item therefore, relies on the availability and fault-tolerance of the used persistent volumes
+      \end{itemize}
+
+    \item[Self-healing of daemons]\hfill\\
+      \begin{itemize}
+        \item Defined via \texttt{DaemonSets}: \url{https://kubernetes.io/docs/concepts/workloads/controllers/daemonset}
+        \item Ensures (monitors, restarts) that a copy of an application is run on each node (also on added or removed nodes)
+        \item no real recovery if a node fails. Relies on manual action to replace the failed node. Then the \texttt{DaemonSet} will take care of creating the daemon pod on the newly added node.
+      \end{itemize}
+
+    \item[Self-healing of jobs]\hfill\\
+      \begin{itemize}
+        \item one-time jobs, terminating application
+      \end{itemize}
+  \end{description}
+
+\subsection{Survivable}\label{sec:self-healing-kubernetes:survivable}
+  survivable through: user can assign priority classes to critical pods and is able to create pod disruption budgets that limit the number of replicated pods that can are evicted simultaneously
+  \begin{itemize}
+    \item \url{https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/}
+    \item we can define priority classes and assign pods to those
+    \item pod priority will affect scheduling order (higher priority pods first)
+    \item under resource pressure, higher priority nodes that are created and scheduled will evict lower priority pods (with their graceful termination period after which they are killed)
+    \item pod disruption budgets can be specified to limit the number of replicated pods that are simultaneously down from voluntary disruption (draining, and also preemption)\footnote{\url{https://kubernetes.io/docs/concepts/workloads/pods/disruptions/\#how-disruption-budgets-work}}
+    \item pod disruption budgets are considered only on best effort basis during preemption
+  \end{itemize}
