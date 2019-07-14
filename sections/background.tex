@@ -72,36 +72,26 @@
   The selected nodes form a hierarchy and perform different parts of the self-management logic.
   This means that the self-management logic is distributed in the cluster to overcome the connectedness to the application code~\cite{ToffettiMicroservices}.
 
-\subsection{Self-healing challenges in cloud environments}
+\subsection{Self-healing in cloud environments}
+  As more and more applications are deployed in cloud environments, developers must consider the implications of running their software in the cloud.
+  The Reactive Manifesto~\cite{reactivemanifesto} records the requirements, which today's software is facing.
+  It asks for more resilient and responsive systems and postulates that resilience can be achieved by replication, containment, isolation, and delegation.
+  Recovery should be handled by an external component to the application.
+  This could be a self-healing manager.
+  If the self-healing manager is run external to the application, it must itself be resilient to failures.
+
+  Yesterday's software was deployed on bare metal or virtual machines, but in the cloud multiple layers of abstractions and virtualizations are used.
+  Most of the time this is transparent to the application as \gls{paas} solutions are used.
+  This means that compute units are much easier to scale, exchange and expand.
+  On the other hand, self-healing strategies in cloud environments differ significantly from traditional ones, because the self-healing manager has no control over the underlying infrastructure and must work on higher abstraction levels.
+
   While systems and software components can fail in various ways and research has come up with general failure classifications and resolutions~\cite[Tab.~1]{PsaierSurvey} for any software systems, failures in cloud environments can be reduced to one failure class: a node or component is detected unreachable.
-  Although an unreachable node can have different root causes on the infrastructure level, the impact on the system is the same and we have no control about the infrastructure in a cloud deployment.
-  This means that we have to find other ways besides repairing the infrastructure to heal from those failures.
-  Node failures can be detected via heartbeat messages or latency metrics and a common recovery strategy used is the restart of the software that was running on the node on another node.
+  Although an unreachable node can have different root causes on the infrastructure level, the impact on the system is the same.
+  Because application developers have no control about the infrastructure in a cloud deployment, they have to find other ways besides repairing the infrastructure to heal from failures in the cloud.
+  Node failures can be detected via heartbeat messages or latency metrics and a common recovery strategy is the redeployment of the software that was running on the node on another node.
 
-  \begin{quote}
-    In the pre-cloud days, this would have been pretty manual, some poor sap of an engineer would have to nurse a bare metal or VM back to health.
-    Now, with cloud-based abstractions, individual compute units are much more expendable.
-    We can just take them down and replace them with new ones.
-  \end{quote}
-
-  \begin{itemize}
-    \item self-healing manager must be resilient itself
-    \item Reactive Manifesto~\cite{reactivemanifesto} asks for more resilient and responsive systems.
-    The resilience is achieved by replication, containment, isolation, and delegation.
-    Recovery should be handled by an external component.
-    This could be a self-healing component.
-    \item \cite{StackCloud}
-      \begin{itemize}
-        \item hierarchical approach
-        \item layered master-slave architecture to provide flexibility and high availability
-        \item targets decentralized cloud architectures
-      \end{itemize}
-    \item \cite{gru}
-      \begin{itemize}
-      \item similar to this approach, but they have developed their own container orchestration tool, called Gru, instead of using \gls{kubernetes}
-      \item also targets microservice architectures deployed in containers
-    \end{itemize}
-  \end{itemize}
+  Research approaches that deal with these challenges for self-healing systems in the cloud are \citeauthor{StackCloud}~\cite{StackCloud}, who developed an hierarchical approach using a master-slave architecture to provide flexible and high available self-healing functionality in a cloud architecture, and \citeauthor{gru}~\cite{gru}, who have a similar approach to \gls{kubernetes}.
+  They developed their own self-healing container orchestration tool that targets microservice architectures deployed in containers.
 
 \section[Kubernetes]{\gls{kubernetes}}\label{sec:kubernetes}
   % https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/
@@ -144,7 +134,7 @@
   (ii) the object \texttt{spec}, which describes the desired state for the object and is provided by the user, and
   (iii) the object \texttt{status}, which describes the actual state of the object.
   Users of \gls{kubernetes} therefore only provide the object's metadata and \texttt{spec} to declare the desired deployment of their containerized applications on nodes and policies around how the application should behave.
-  \Gls{kubernetes} will constantly update the \texttt{state} of the objects according to the observed cluster state and take corrective actions in the cluster to ensure that the cluster state matches the desired one declared in the objects' \texttt{spec}~\cite{kubernetes}.
+  \Gls{kubernetes} will constantly update the \texttt{state} of the objects according to the observed cluster state and takes corrective actions in the cluster to ensure that the cluster state matches the desired one declared in the objects' \texttt{spec}~\cite{kubernetes}.
 
   % https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   % should I describe labels as well?
