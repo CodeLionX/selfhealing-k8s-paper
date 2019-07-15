@@ -32,7 +32,7 @@
 
   \begin{figure}
     \centering
-    \includegraphics[width=\linewidth]{reduced-control-loop}
+    \includegraphics[width=.9\linewidth]{reduced-control-loop}
     \caption{Condensed autonomic control loop as the self-healing loop}
     \label{fig:self-healing-loop}
   \end{figure}
@@ -96,7 +96,7 @@
 \section[Kubernetes]{\gls{kubernetes}}\label{sec:kubernetes}
   % https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/
   \Gls{kubernetes} is an open-source platform for automating and managing distributed software in the cloud.
-  It heavily relies on container technology and supports the declarative configuration of the managed containers.
+  It heavily relies on container technology and supports declarative configuration of the managed containers.
   \Gls{kubernetes} was developed by Google and is open-source software since 2014~\cite{kubernetes}.
 
   % https://kubernetes.io/docs/concepts/overview/components/
@@ -110,7 +110,7 @@
 
   \begin{figure}
     \centering
-    \includegraphics[width=\linewidth]{k8s-architecture}
+    \includegraphics[width=.9\linewidth]{k8s-architecture}
     \caption{\Gls{kubernetes} architecture}
     \label{fig:kubernetes-architecture}
   \end{figure}
@@ -122,7 +122,7 @@
   (i) the \texttt{kube-apiserver} that exposes the control options to the user and other software,
   (ii) an \texttt{etcd}~\cite{etcd} instance as store for all cluster data,
   (iii) the \texttt{kube-scheduler}, which schedules newly created pods to the nodes in the cluster,
-  (iv) the \texttt{kube-controller-manager}, which runs node and pod controllers, and
+  (iv) the \texttt{kube-controller-manager}, which runs Node and \glspl{pod controller}, and
   (v) the \texttt{cloud-controller-manager} to interact with the underlying cloud providers~\cite{kubernetes}.
 
   % https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/
