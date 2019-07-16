@@ -54,19 +54,23 @@
 
 \subsection{Fault-tolerant}\label{sec:self-healing-kubernetes:fault-tolerant}
   \Gls{kubernetes} uses pods and containers to isolate different parts of the managed application from one another.
-  This fits well for microservice architectures.
+  This fits well for microservice architectures and creates failure domains.
+  \Gls{kubernetes} can only provide fault-tolerance if the managed application makes use of pod replication and \glspl{service}.
 
-  fault-tolerant through replication and isolation to ensure system availability:
-  \begin{itemize}
-    \item \gls{kubernetes} is a distributed system, only one master per default, but master components can be placed on all nodes
-    \item \gls{kubernetes} uses pods and containers for isolation and containment
-    \item to ensure application availability: application must make use of provided features and support distributed deployment (especially replication)
-  \end{itemize}
+  Pod replication means that for each microservice type, we let \gls{kubernetes} create multiple pods with the same configuration and containers.
+  This means that we run multiple microservice instances at the same time.
+  The \texttt{kube scheduler} automatically spreads those replicas across the available nodes to increase the failure tolerance{\url{https://kubernetes.io/docs/concepts/configuration/assign-pod-node/}}.
+  This allows other replicas to take over the workload if one replica fails through an involuntary disruption.
+
+  To allow external services to communicate with our replicas, we must be able to reroute the traffic from failing pods to the remaining ones.
+  This is done by specifying a \gls{service}, which exposes the set of replicated pods to the cluster internal and external network.
+  It performs the load balancing and rerouting of the network traffic to the changing pod instances.
+  This decouples the service access from the actual placement and deployment of the pods.
 
 \subsection{Self-stabilizing}\label{sec:self-healing-kubernetes:self-stabilizing}
   Pods can be created manually, but this means the user has to take care of recovering failed pods.
   A better solution is to use \glspl{pod controller}.
-  They take pod description objects and manage pods automatically.
+  They take pod description objects and manage their pods automatically.
   \Glspl{pod controller} execute the Detect -- Analyze -- Recover loop and run in the \texttt{kube-controller-manager} as a master component.
   \Glspl{pod controller} monitor the health of their managed pods via heartbeats and user-defined liveness probes\footnote{\url{https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/}}.
   Based on this monitoring the \texttt{state} part of the descriptor object is continuously updated to reflect the actual system state.
@@ -116,12 +120,18 @@
     If those conditions are not yet met, the controller will recover failed pods.
 
 \subsection{Survivable}\label{sec:self-healing-kubernetes:survivable}
-  survivable through: user can assign priority classes to critical pods and is able to create pod disruption budgets that limit the number of replicated pods that can are evicted simultaneously
-  \begin{itemize}
-    \item \url{https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/}
-    \item we can define priority classes and assign pods to those
-    \item pod priority will affect scheduling order (higher priority pods first)
-    \item under resource pressure, higher priority nodes that are created and scheduled will evict lower priority pods (with their graceful termination period after which they are killed)
-    \item pod disruption budgets can be specified to limit the number of replicated pods that are simultaneously down from voluntary disruption (draining, and also preemption)\footnote{\url{https://kubernetes.io/docs/concepts/workloads/pods/disruptions/\#how-disruption-budgets-work}}
-    \item pod disruption budgets are considered only on best effort basis during preemption
-  \end{itemize}
+  Survivable systems maintain the essential services of the managed application in the case of failure and resource pressure, while non-essential services may experience disruptions and are recovered after the failure has been dealt with.
+  \Gls{kubernetes} provides two ways for the user to influence the pod scheduling algorithm: \glspl{priority class} and \glspl{pdb}.
+  They can be used to compile a set of policies that help the scheduler to decide, which pods are essential and how many disruptions a set of replicated pods can handle.
+
+  \Glspl{priority class} map to integer values, where a higher value indicates higher priority, and the user can assign them to the pods.
+  Pod priority will affect the scheduling order of the pods.
+  Higher priority pods will be scheduled first.
+  In addition, under resource pressure higher priority pods in the scheduler queue will lead to lower priority pods being evicted by the scheduler.
+  This is called preemption.
+  If the user assigns high priority \glspl{priority class} to the essential services, the scheduler will do its best to recreate all instances of the essential services if they fail.
+  It will even evict lower priority pods to make room for the essential services\footnote{\url{https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/}}.
+
+  To prevent the scheduler to evict all instances of a lower priority service, the user can specify \glspl{pdb}.
+  They limit the number of replicated pods that are down due to voluntary disruptions, such as draining or preemption.
+  Unfortunately, the scheduler only considers \glspl{pdb} on best effort basis during preemption, which limits the applicability of \glspl{pdb} for self-healing\footnote{\url{https://kubernetes.io/docs/concepts/workloads/pods/disruptions/\#how-disruption-budgets-work}}.
