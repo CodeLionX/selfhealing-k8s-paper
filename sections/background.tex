@@ -72,7 +72,7 @@
   The selected nodes form a hierarchy and perform different parts of the self-management logic.
   This means that the self-management logic is distributed in the cluster to overcome the connectedness to the application code~\cite{ToffettiMicroservices}.
 
-\subsection{Self-healing in cloud environments}
+\subsection{Self-healing in cloud environments}\label{sec:self-healing:cloud}
   As more and more applications are deployed in cloud environments, developers must consider the implications of running their software in the cloud.
   The Reactive Manifesto~\cite{reactivemanifesto} records the requirements, which today's software is facing.
   It asks for more resilient and responsive systems and postulates that resilience can be achieved by replication, containment, isolation, and delegation.
@@ -91,7 +91,7 @@
   Node failures can be detected via heartbeat messages or latency metrics and a common recovery strategy is the redeployment of the software that was running on the node on another node.
 
   Research approaches that deal with these challenges for self-healing systems in the cloud are \citeauthor{StackCloud}~\cite{StackCloud}, who developed an hierarchical approach using a master-slave architecture to provide flexible and high available self-healing functionality in a cloud architecture, and \citeauthor{gru}~\cite{gru}, who have a similar approach to \gls{kubernetes}.
-  They developed their own self-healing container orchestration tool that targets microservice architectures deployed in containers.
+  They developed their own self-healing container orchestration tool, called Gru, that targets microservice architectures deployed in containers.
 
 \section[Kubernetes]{\gls{kubernetes}}\label{sec:kubernetes}
   % https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/

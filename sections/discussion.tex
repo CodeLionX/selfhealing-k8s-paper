@@ -3,32 +3,23 @@
 % !TeX spellcheck = en_US
 
 \section{Discussion}\label{sec:discussion}
-  \begin{enumerate}
-    \item requires containerized microservice application
-    \item code must support scaling and dynamic communication
-    \item provider of \texttt{PersistentVolumes} must ensure their availability and fault-tolerance
-    \item to deal with a node failure, remaining nodes must have enough spare capacity to host the failed pods or eviction kicks in
-    \item with replication factor 1, there are down times during re-creation of the pod on another node
-    \item limitations
-    \begin{itemize}
-      \item \textbf{external management logic has to be themselves resilient, fault-tolerant, and scalable}
-      \item \gls{kubernetes} default only one master $\rightarrow$ HA setup across availability zones
-      \item quite a lot of configuration work, not automation yet (WIP)
-      \item only one master will be active (the other two will be passive), full state replication via etcd
-      \item fail-over will be handled by load balancer component
-      \item \textbf{only external view on the system}
-      \item \textbf{\gls{kubernetes} does not automatically repair or restart failing nodes}
-      \item --> automatic node repairs on GCE: \url{https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair}
-      \item components external to \gls{kubernetes} are not included in self-healing logic (such as external storage or load balancers of cloud provider)
-    \end{itemize}
-    \item benefits
-    \begin{itemize}
-      \item healing from pod / container failures and node failures out-of-the-box
-      \item declarative definition of system state
-      \item rich API to retrieve current system state
-    \end{itemize}
-    \item interesting facts and insights
-      \begin{itemize}
-        \item nothing not mentioned yet
-      \end{itemize}
-  \end{enumerate}
+  As we have described in \cref{sec:self-healing-kubernetes} \gls{kubernetes} provides all features required to setup a self-healing systems.
+  Nevertheless, it requires the managed application to make use of the features and the user (developer or administrator) to configure the application deployment correctly.
+  This includes packing the application parts in containers, writing an application that supports replication and distribution, using \glspl{service}, \glspl{pod controller}, \glspl{priority class}, and \glspl{pdb}, and setting up external services for persistent storage of stateful services.
+  Compared to implementing new recovery methods or specifying imperative recovery policies, \gls{kubernetes} is configured via the declarative definition of the desired system state.
+  This provides a high abstraction and eases the usage of \gls{kubernetes} for equipping a system with self-healing capabilities in a cloud environment.
+  The recovery and healing logic is provided by \gls{kubernetes} and thoroughly tested in big production environments.
+  \Gls{kubernetes} also provides a rich API to retrieve the current system state and update the desired state.
+  This can be used to extend \gls{kubernetes} with further self-healing logic.
+  Using \gls{kubernetes} for self-healing systems also comes with some limitations:
+  \begin{itemize}
+    \item \gls{kubernetes} has only an external view on the managed system.
+      This is no problem at all, because failure recovery in the cloud domain is reduced to detecting nodes unreachable and re-deploying the software that was running on the node on another one (see \cref{sec:self-healing:cloud}).
+    \item \gls{kubernetes} does not automatically repair failing infrastructure, such as nodes, external load balancers, or storage volumes.
+      It relies on the availability and fault tolerance of the underlying infrastructure for \texttt{PersistentVolumes}.
+      % --> automatic node repairs on GCE: \url{https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair}
+    \item As \gls{kubernetes} is external to the application, it must itself be resilient and fault tolerant.
+      Per default the \gls{kubernetes}' master components are only deployed on one node.
+      This does not provide any fault-tolerance and therefore one must deploy a high-availability \gls{kubernetes} setup with multiple master nodes, potentially across availability zones.
+      This setup is considerably complex and not yet automated.
+  \end{itemize}
