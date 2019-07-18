@@ -21,12 +21,12 @@
   % orchestration --> docker and kubernetes
   For those complex distributed software systems consisting of hundreds of microservices, deployment and management gets more complex as well.
   The service management can be simplified by executing the microservices isolated from each other in containers, such as Docker containers~\cite{docker}.
-  Container orchestration tools, such as \gls{kubernetes}~\cite{kubernetes}, can further be used to deploy, scale, and manage containerized distributed microservice applications.
+  Container orchestration tools, such as \gls{kubernetes}~\cite{kubernetes}, can further be used to deploy, scale, and manage containerized microservice applications.
 
   % self-adaptive systems
   The increasing complexity of modern software systems motivated the development of self-adaptive systems.
   Those systems introduce an autonomous behavior that takes decisions at runtime and manages the complex underlying software system.
-  This allows the software systems to adapt to unpredictable system changes and changing environments.
+  This allows the software systems to adapt to unpredictable changes in their environments.
   Self-adaptive systems combine four self properties, as defined by \citeauthor{Ganek}~\cite{Ganek}:
 
   \begin{description}
@@ -42,24 +42,22 @@
   One essential part of a self-adaptive systems are its self-healing capabilities, which we will focus on in this paper.
   Self-healing systems monitor the running application and try to keep the system in an healthy state to increase availability and maintain the essential functionality.
   Therefore, they have to be fault tolerant, mask temporary failures, and recover from them in a finite amount of time to reach the healthy system state again.
-  In cloud environments, self-healing techniques are already used in the form of approaches and tools that try to achieve continuous availability for cloud services.
+  In cloud environments, self-healing techniques are already used in the form of tools that try to achieve continuous availability for cloud services.
   Those tools detect disruptions, diagnose failures and recover from them by applying an appropriate strategy~\cite{PsaierSurvey}.
   As an example, consider Apache Mesos~\cite{mesos} and Mesosphere~\cite{mesosphere}.
-  They perform periodic health checks to ensure a leader is available in the cluster all the time.
+  They perform periodic health checks to ensure a leader is available in the cluster at all times.
   This means they can detect failing nodes and replace them automatically.
   Other tools are located in the infrastructure layer:
   Amazon Auto Scaling~\cite{amazon-auto-scaling} and Google Cloud Managed Instance Groups~\cite{gcp-mig} monitor VM instances and automatically recreate them when they crash or stop.
   In addition, both tools allow the user to specify application health checks.
-  However, in this paper we will focus on \gls{kubernetes}~\cite{kubernetes}.
+  However, we will focus on \gls{kubernetes}~\cite{kubernetes}.
 
   % contribution
   In this paper, we compare the solutions and approaches proposed in self-healing research literature with the way \gls{kubernetes} implements self-healing capabilities for microservices in the cloud.
   We show, which self-healing concepts are already implemented by \gls{kubernetes} and where there are still open issues and limitations.
-
   % outline
-  The rest of this paper is structures as follows:
-  \Cref{sec:self-healing} introduces the concept of self-healing systems, summarizes recent research literature in this area, and discusses self-healing challenges in the cloud environment.
-  In \cref{sec:kubernetes}, we quickly present base concepts and the architecture of \gls{kubernetes}.
-  Using those base concepts, we can then explain, how \gls{kubernetes} implements self-healing capabilities in \cref{sec:self-healing-kubernetes}.
-  The discussion of benefits and limitations of \gls{kubernetes}' self-healing capabilities follows in \cref{sec:discussion}.
-  We conclude this paper in \cref{sec:conclusion}.
+  The rest of this paper is structured as follows:
+  \Cref{sec:self-healing} introduces the concept of self-healing systems, summarizes recent research literature in this area, and discusses self-healing challenges in cloud environments.
+  In \cref{sec:kubernetes}, we quickly present base concepts of \gls{kubernetes} and its architecture.
+  Using this information, we can then explain, how \gls{kubernetes} implements self-healing capabilities in \cref{sec:self-healing-kubernetes}.
+  The discussion of benefits and limitations of \gls{kubernetes}' self-healing capabilities follows in \cref{sec:discussion}, before concluding this paper in \cref{sec:conclusion}.
