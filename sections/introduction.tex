@@ -50,7 +50,7 @@
   Other tools are located in the infrastructure layer:
   Amazon Auto Scaling~\cite{amazon-auto-scaling} and Google Cloud Managed Instance Groups~\cite{gcp-mig} monitor VM instances and automatically recreate them when they crash or stop.
   In addition, both tools allow the user to specify application health checks.
-  However, in this paper we will focus on \gls{kubernetes}.
+  However, in this paper we will focus on \gls{kubernetes}~\cite{kubernetes}.
 
   % contribution
   In this paper, we compare the solutions and approaches proposed in self-healing research literature with the way \gls{kubernetes} implements self-healing capabilities for microservices in the cloud.
@@ -58,7 +58,7 @@
 
   % outline
   The rest of this paper is structures as follows:
-  \Cref{sec:self-healing} introduces the concept of self-healing systems, discusses self-healing challenges in the cloud environment, and summarizes recent research literature in this area.
+  \Cref{sec:self-healing} introduces the concept of self-healing systems, summarizes recent research literature in this area, and discusses self-healing challenges in the cloud environment.
   In \cref{sec:kubernetes}, we quickly present base concepts and the architecture of \gls{kubernetes}.
   Using those base concepts, we can then explain, how \gls{kubernetes} implements self-healing capabilities in \cref{sec:self-healing-kubernetes}.
   The discussion of benefits and limitations of \gls{kubernetes}' self-healing capabilities follows in \cref{sec:discussion}.
