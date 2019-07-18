@@ -3,8 +3,8 @@
 % !TeX spellcheck = en_US
 
 \section{Discussion}\label{sec:discussion}
-  As we have described in \cref{sec:self-healing-kubernetes}, \gls{kubernetes} provides all features required to setup a self-healing systems.
-  Nevertheless, it requires the managed application to make use of those features and the user to configure the application deployment correctly.
+  As described in \cref{sec:self-healing-kubernetes}, \gls{kubernetes} provides all features required to setup a self-healing systems.
+  Nevertheless, it requires the managed application to make use of those features and the user to configure the deployment correctly.
   This includes packing the application parts in containers, writing an application that supports replication and distribution, using \glspl{service}, \glspl{pod controller}, \glspl{priority class}, and \glspl{pdb}, and setting up external services for persistent storage of stateful services.
   Compared to implementing new recovery methods or specifying imperative recovery policies, \gls{kubernetes} is configured via the declarative definition of the desired system state.
   This provides a high abstraction and eases the usage of \gls{kubernetes} for equipping a system with self-healing capabilities in a cloud environment.
