@@ -117,7 +117,7 @@
   In addition, under resource pressure higher priority pods in the scheduler queue will lead to the eviction of lower priority pods.
   This is called preemption.
   If the user assigns high priority \glspl{priority class} to the essential services, the scheduler will do its best to maintain all instances of the essential services.
-  In the case of failures and resource pressure, it will even evict lower priority pods to make room for the essential services.
+  In the case of failures, it will even evict lower priority pods to make room for the essential services if necessary.
 
   To prevent the scheduler to evict all instances of a lower priority service, the user can specify \glspl{pdb}.
   They limit the number of replicated pods that are down due to voluntary disruptions, such as draining or preemption.

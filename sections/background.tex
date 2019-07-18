@@ -56,11 +56,10 @@
   One approach are architecture-based self-healing systems, in which external self-healing managers perform repairs on the level of software components and connectors of the monitored systems~\cite{DashofyArchitecture}.
   The assumption of those approaches is that the component boundaries are the most loosely coupled points in the software system and can be reconfigured to allow changes in the architecture during runtime.
 
-  \citeauthor{DashofyArchitecture} present the infrastructure to develop and run an architecture-based self-healing system for event-based software architectures in~\cite{DashofyArchitecture}.
+  \citeauthor{DashofyArchitecture} present the infrastructure to develop and run an architecture-based self-healing system for event-based applications in~\cite{DashofyArchitecture}.
   They chose event-based architectures, because all included components show a significant degree of autonomy.
   This reduces coupling of the components and makes external changes to the running system possible.
 
-\subsection{Self-healing microservices}
   Microservice architectures take isolation of software components to the next level and improve the autonomy of the components (called microservices).
   This makes applying architecture-based self-healing easier, because services are decoupled, autonomous, and scalable and service boundaries are well-defined.
   External self-healing managers can monitor the microservices of the application and apply repairs to the failing ones by replacing the service with another one and rerouting the messages.
@@ -84,7 +83,7 @@
   Component failures can be detected via heartbeat messages or latency metrics and a common recovery strategy is the redeployment of the failed component, possibly on a different node.
 
   Research approaches that deal with these challenges for self-healing systems in the cloud are \citeauthor{StackCloud}~\cite{StackCloud}, who developed an hierarchical approach using a master-slave architecture to provide flexible and high available self-healing functionality in the cloud, and \citeauthor{gru}~\cite{gru}, who use a similar approach than \gls{kubernetes}.
-  They developed their own self-healing container orchestration tool, called Gru, that targets microservice architectures deployed in containers.
+  They developed their own self-healing container orchestration tool, called Gru, for microservice architectures.
 
 \section[Kubernetes]{\gls{kubernetes}}\label{sec:kubernetes}
   % https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/
