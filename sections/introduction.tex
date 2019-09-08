@@ -11,12 +11,12 @@
   This can be achieved via replication, containment, isolation, and monitoring paired with responsive actions to failures~\cite{reactivemanifesto}.
 
   % microservices
-  One way to realize containment and isolation of software components in a scalable way are microservice architectures.
-  In this approach, the software application is decomposed along business domain boundaries into small, lightweight, autonomous services.
+  Microservice architectures are a way to realize containment and isolation of software components in a scalable way.
+  In this approach, the software application is decomposed along business domain boundaries into small, lightweight, and autonomous services.
   Each service runs as its own application decoupled from the other services and acts as a scaling unit.
   Services communicate through lightweight REST APIs or asynchronous message queues.
   Microservice architectures embrace failure.
-  If a service relies on another services, it is aware that the other service may not be available or the connection may be slow and the service can deal with the failures~\cite{microservices}.
+  If a service relies on other services, it is aware that the other service may not be available or the connection may be slow and the service can deal with the failures~\cite{microservices}.
 
   % orchestration --> docker and kubernetes
   For those complex distributed software systems consisting of hundreds of microservices, deployment and management gets more complex as well.
@@ -30,8 +30,8 @@
   Self-adaptive systems combine four self properties, as defined by \citeauthor{Ganek}~\cite{Ganek}:
 
   \begin{description}
-    \item[self-configuring] The systems adapt automatically to dynamically changing environments (\enquote{on-the-fly}).
-    \item[self-healing] The systems discover, diagnose, and react to failures reducing disruptions and enabling continuous availability.
+    \item[self-configuring] Systems adapt automatically to dynamically changing environments (\enquote{on-the-fly}).
+    \item[self-healing] Systems discover, diagnose, and react to failures reducing disruptions and enabling continuous availability.
     \item[self-optimization] Systems efficiently maximize resource utilization.
     \item[self-protection] Systems anticipate, detect, identify, and protect themselves from attacks.
   \end{description}
@@ -39,25 +39,25 @@
   This list has been continuously extended and the extended properties are now referred to as self-* properties~\cite{PsaierSurvey}.
 
   % self-healing
-  One essential part of a self-adaptive systems are its self-healing capabilities, which we will focus on in this paper.
-  Self-healing systems monitor the running application and try to keep the system in an healthy state to increase availability and maintain the essential functionality.
+  Essential parts of self-adaptive systems are its self-healing capabilities, which is our focus in this paper.
+  Self-healing systems monitor the running application and try to keep it in a healthy state to increase availability and maintain the essential functionality.
   Therefore, they have to be fault tolerant, mask temporary failures, and recover from them in a finite amount of time to reach the healthy system state again.
-  In cloud environments, self-healing techniques are already used in the form of tools that try to achieve continuous availability for cloud services.
+  In cloud environments, self-healing techniques are already used in form of tools that try to achieve continuous availability for cloud services.
   Those tools detect disruptions, diagnose failures and recover from them by applying an appropriate strategy~\cite{PsaierSurvey}.
   As an example, consider Apache Mesos~\cite{mesos} and Mesosphere~\cite{mesosphere}.
   They perform periodic health checks to ensure a leader is available in the cluster at all times.
   This means they can detect failing nodes and replace them automatically.
   Other tools are located in the infrastructure layer:
-  Amazon Auto Scaling~\cite{amazon-auto-scaling} and Google Cloud Managed Instance Groups~\cite{gcp-mig} monitor VM instances and automatically recreate them when they crash or stop.
+  Amazon Auto Scaling~\cite{amazon-auto-scaling} and Google Cloud Managed Instance Groups~\cite{gcp-mig} monitor \gls{vm} instances and automatically recreate them when they crash or stop.
   In addition, both tools allow the user to specify application health checks.
   However, we will focus on \gls{kubernetes}~\cite{kubernetes}.
 
   % contribution
   In this paper, we compare the solutions and approaches proposed in self-healing research literature with the way \gls{kubernetes} implements self-healing capabilities for microservices in the cloud.
-  We show, which self-healing concepts are already implemented by \gls{kubernetes} and where there are still open issues and limitations.
+  We show which self-healing concepts are already implemented by \gls{kubernetes} and where there are still open issues and limitations.
   % outline
   The rest of this paper is structured as follows:
   \Cref{sec:self-healing} introduces the concept of self-healing systems, summarizes recent research literature in this area, and discusses self-healing challenges in cloud environments.
   In \cref{sec:kubernetes}, we quickly present base concepts of \gls{kubernetes} and its architecture.
-  Using this information, we can then explain, how \gls{kubernetes} implements self-healing capabilities in \cref{sec:self-healing-kubernetes}.
+  Using this information, we can then explain how \gls{kubernetes} implements self-healing capabilities in \cref{sec:self-healing-kubernetes}.
   The discussion of benefits and limitations of \gls{kubernetes}' self-healing capabilities follows in \cref{sec:discussion}, before concluding this paper in \cref{sec:conclusion}.

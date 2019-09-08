@@ -11,15 +11,17 @@
   A widely-used definition for self-healing systems is from \citeauthor{Ghosh}~\cite{Ghosh}:
 
   \begin{quote}
-    The key focus [...] is that a self-healing system should recover from the abnormal (or \enquote{unhealthy}) state and return to the normative (\enquote{healthy}) state, and function as it was prior to disruption.
+    \enquote{%
+    The key focus [...] is that a self-healing system should recover from the abnormal (or \enquote{unhealthy}) state and return to the normative (\enquote{healthy}) state, and function as it was prior to disruption.%
+    }
   \end{quote}
 
-  This definition is very broad, but one can argue that the key aspect of self-healing systems are recovery oriented functionalities that bring the system back to the healthy state, which neither sole fault-tolerant systems nor sole survivable systems encompass~\cite{PsaierSurvey}.
+  This definition is very broad, but one can argue that the key aspects of self-healing systems are recovery oriented functionalities that bring the system back to the healthy state, which neither sole fault-tolerant systems nor sole survivable systems encompass~\cite{PsaierSurvey}.
 
-  Like in an autonomous system, the main component in a self-healing system is the self-healing manager.
+  Similar to an autonomous system, the main component in a self-healing system is the self-healing manager.
   It runs a control loop with three stages that is a reduced version of the autonomic control loop, also referred to as MAPE-K loop~\cite{ibm_autonomic}.
-  \Cref{fig:self-healing-loop} shows the mapping of the three stages to the MAPE-K control loop.
-  The stages are~\cite{PsaierSurvey}:
+  \Cref{fig:self-healing-loop} shows the mapping of the three stages to the MAPE-K control loop~\cite{PsaierSurvey}.
+  The stages are:
 
   \begin{description}
     \item[Detect] The self-healing manager filters the status information about the running system and reports suspicious events and detected degradations.
@@ -27,7 +29,7 @@
     \item[Recover] In the recovery phase the manager applies the strategies to the system while it avoids any unpredictable side effects.
   \end{description}
 
-  There are two different ways, how a software system can be equipped with the above mentioned self-healing capabilities:
+  There are two different ways how a software system can be equipped with the above self-healing capabilities:
 
   \begin{figure}
     \centering
@@ -50,10 +52,10 @@
   There are also open-source alternatives that include self-healing capabilities and can be used as middleware between cloud infrastructure and the application, such as \gls{kubernetes} or Mesosphere.
 
 \subsection{Architecture-based self-healing}
-  In the past most self-healing capabilities were included in the application code itself.
+  In the past, most self-healing capabilities were included in the application code itself~\cite{SchmerlsArchitecture}.
   This has the downside that the self-healing adaption engines and rules are tightly coupled to the application code and can't be reused.
   Researchers have therefore developed ways to generalize self-healing mechanisms.
-  One approach are architecture-based self-healing systems, in which external self-healing managers perform repairs on the level of software components and connectors of the monitored systems~\cite{DashofyArchitecture}.
+  Architecture-based self-healing systems are one approach, in which external self-healing managers perform repairs on the level of software components and connectors of the monitored systems~\cite{DashofyArchitecture}.
   The assumption of those approaches is that the component boundaries are the most loosely coupled points in the software system and can be reconfigured to allow changes in the architecture during runtime.
 
   \citeauthor{DashofyArchitecture} present the infrastructure to develop and run an architecture-based self-healing system for event-based applications in~\cite{DashofyArchitecture}.
@@ -71,8 +73,8 @@
   This means that the self-management logic is distributed in the cluster to overcome the connectedness to the application code~\cite{ToffettiMicroservices}.
 
 \subsection{Self-healing in cloud environments}\label{sec:self-healing:cloud}
-  As more and more applications are deployed in cloud environments, developers must consider the implications of running their software in the cloud.
-  Yesterday's software was deployed on bare metal or virtual machines, but in the cloud multiple layers of abstractions and virtualizations are used.
+  As more applications are deployed in cloud environments, developers must consider the implications of running their software in the cloud.
+  Past software was deployed on bare metal or virtual machines, but in the cloud, multiple layers of abstractions and virtualizations are used.
   Most of the time this is transparent to the application as \gls{paas} solutions are used.
   This means that compute units are much easier to scale, exchange, and expand making recovery strategies simpler.
   On the other hand, self-healing strategies in cloud environments differ significantly from traditional ones, because the self-healing manager has no control over the underlying infrastructure and must work on higher abstraction levels.
@@ -92,10 +94,11 @@
   \Gls{kubernetes} was developed by Google and is open-source software since 2014~\cite{kubernetes}.
 
   % https://kubernetes.io/docs/concepts/overview/components/
-  \Gls{kubernetes} is build on top of existing \gls{paas} solutions and consists of a master-slave architecture, which is depicted in \cref{fig:kubernetes-architecture}, forming a cluster.
+  \Gls{kubernetes} is built on top of existing \gls{paas} solutions and consists of a master-slave architecture forming a cluster as depicted in \cref{fig:kubernetes-architecture}.
   Slave nodes, \gls{kubernetes} calls them only \enquote{nodes}, are responsible for executing and maintaining the actual application via an underlying container runtime.
-  Most of the time Docker~\cite{docker} is used.
-  The nodes also run \gls{kubernetes} components that manage cluster networking (\texttt{kube-proxy}) and interact with the container runtime and the master to monitor and manage the pods of the local node (\texttt{kubelet}).
+  Docker~\cite{docker} is most common.
+  The nodes also run \gls{kubernetes} components that manage cluster networking (\texttt{kube-proxy}) and interact with the container runtime and the master (\texttt{kubelet}).
+  The \texttt{kubelet} monitors and manages pods of the local node.
   % https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/
   Pods are the smallest deployment unit in \gls{kubernetes} and consist of the application container (or multiple), connected resources, such as storages or network addresses, and configuration options.
   Container runtime, \texttt{kube-proxy} and \texttt{kubelet} form the \gls{kubernetes} runtime environment~\cite{kubernetesdoc}.
@@ -108,7 +111,7 @@
   \end{figure}
 
   The \gls{kubernetes} master components provide the cluster's control plane.
-  As shown in the upper third of \cref{fig:kubernetes-architecture}, they typically run only on one node, which does not run application pods.
+  As shown in the top of \cref{fig:kubernetes-architecture}, they typically run only on one node that does not run application pods.
   However, the components can be executed on any node in the cluster.
   The master components include
   (i) the \texttt{kube-apiserver} that exposes the control options to the user and other software,

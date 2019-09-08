@@ -2,13 +2,14 @@
 % !TeX encoding = UTF-8
 % !TeX spellcheck = en_US
 
-\section{\Gls{kubernetes}' self-healing capabilities}\label{sec:self-healing-kubernetes}
-  In this section we will go through the self-healing capabilities of \gls{kubernetes}.
-  In \cref{sec:self-healing-kubernetes:overview}, we will start with a short overview how \gls{kubernetes} approaches self-healing.
+\section{Self-healing capabilities of \gls{kubernetes}}\label{sec:self-healing-kubernetes}
+  In this section we will discuss the self-healing capabilities of \gls{kubernetes}.
+  In \cref{sec:self-healing-kubernetes:overview}, we start with a short overview how \gls{kubernetes} approaches self-healing.
   We then explain, how \gls{kubernetes} implements the three properties of self-healing systems: fault-tolerant in \cref{sec:self-healing-kubernetes:fault-tolerant}, self-stabilizing in \cref{sec:self-healing-kubernetes:self-stabilizing} and survivable in \cref{sec:self-healing-kubernetes:survivable}.
 
 \subsection{Overview}\label{sec:self-healing-kubernetes:overview}
-  \gls{kubernetes}' self-healing capabilities are spread across various components and functionalities, but in essence they also perform the three-staged self-healing loop introduced in \cref{sec:self-healing}.
+  \gls{kubernetes}' self-healing capabilities are spread across various components and functionalities.
+  However, they also perform the three-staged self-healing loop introduced in \cref{sec:self-healing}.
   \gls{kubernetes}' approach to self-healing is comparable to architecture-based self-healing~\cite{ToffettiMicroservices,DashofyArchitecture}.
   Its declarative object configuration model resembles the concept of a desired and an actual runtime architecture of the managed application.
   The desired runtime architecture is defined by the user as deployment configuration using the \texttt{spec} part of the objects.
@@ -19,7 +20,7 @@
 
   There are two levels of disruptions that can occur in a \gls{kubernetes} deployment: Container failure and pod disruptions.
   % https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/\#restart-policy
-  Containers are runtime artifacts defined by users and can therefore fail or crash during execution.
+  containers are runtime artifacts defined by users and can therefore fail or crash during execution.
   Those container failures are captured by the restart policy of their pod objects.
   When the restart policy is set to \textit{Always} or \textit{OnFailure}, failing containers are automatically restarted by the local \texttt{kubelet} component with an exponential back-off strategy.
   In the special case of container failure the self-healing loop is performed by the local \texttt{kubelet} component on each node.
@@ -29,8 +30,8 @@
 
   \begin{itemize}
     \item a hardware failure of the physical machine backing the node
-    \item cloud provider or hypervisor failure makes VM disappear
-    \item administrator deletes VM by mistake
+    \item cloud provider or hypervisor failure makes \gls{vm} disappear
+    \item administrator deletes \gls{vm} by mistake
     \item a kernel panic of the operating system
     \item a cluster network partition removes the node from the cluster
   \end{itemize}
@@ -45,8 +46,8 @@
   % with services, \glspl{pod controller}, \glspl{priority class}, and \glspl{pdb}.
 
 \subsection{Fault-tolerant}\label{sec:self-healing-kubernetes:fault-tolerant}
-  \Gls{kubernetes} uses pods and containers to isolate different parts of the managed application from one another.
-  This fits well for microservice architectures and creates failure domains limiting failure impact.
+  \Gls{kubernetes} uses pods and containers to isolate different parts of the managed application.
+  This fits well for microservice architectures and creates failure domains limiting the failure impact.
   Fault-tolerant applications can be created with \gls{kubernetes} by making use of pod replication and \glspl{service}.
 
   Pod replication allows us to run multiple equivalent pods of a microservice at the same time.
@@ -65,23 +66,23 @@
   \Glspl{pod controller} execute the Detect -- Analyze -- Recover loop and run in the \texttt{kube-controller-manager} as a master component.
   \Glspl{pod controller} monitor the health of their managed pods via heartbeats and user-defined liveness probes~\cite{kubernetesdoc}.
   They continuously update the \texttt{state} part of the descriptor object to reflect the actual system state.
-  Based on the desired state, the current system state, and the policies in the object, the \glspl{pod controller} derive corrective actions to transition the system from the current into the desired state.
+  Based on the desired state, the current system state, and the policies in the object, the \glspl{pod controller} derive corrective actions to transition the system from the current state into the desired state.
   In the case of a failed pod, a controller would for example instruct the deletion of the failed pod and the creation of a new one with the same properties.
-  The \glspl{pod controller} not only contain the self-healing logic for pods but also handle pod replication and rollout.
-  Using \glspl{pod controller}, \gls{kubernetes} is able to recover failed pods and to eventually let the actual state converge to the desired one.
+  The \glspl{pod controller} not only contain the self-healing logic for pods, but also handle pod replication and rollout.
+  Using \glspl{pod controller}, \gls{kubernetes} is able to recover failed pods and to eventually let the faulty state converge to the desired one.
   This means applications managed by \gls{kubernetes} can be self-stabilizing.
 
   There are four different types of pod payloads, which are unique to their failure handling:
   Stateless services, stateful services, daemons, and jobs.
   This is reflected in \gls{kubernetes} by different controller types, one for each payload type:
 
-  \textit{Stateless services} as payloads for \gls{kubernetes} pods are easy to manage, because they can be destroyed and recreated on all nodes without any special resource dependencies.
+  \textbf{Stateless services} as payloads for \gls{kubernetes} pods are easy to manage, because they can be destroyed and recreated on all nodes without any special resource dependencies.
   A stateless service can be defined via a \texttt{Deployment} or a \texttt{ReplicaSet}.
   In the case of a pod failure, those \glspl{pod controller} instruct the deletion of the failed pod and the creation of a new one according to the supplied \texttt{spec}.
   The placement of the pods is transparent and done by the \texttt{kube-scheduler}.
   The controllers always try to match the desired number of replicas.
 
-  \textit{Stateful services} can be defined via a \texttt{StatefulSet}.
+  \textbf{Stateful services} can be defined via a \texttt{StatefulSet}.
   Pods managed by this type of \gls{pod controller} have a unique identity including their name, network ID and configuration.
   They can be connected to \texttt{PersistentVolumes}, which provide persistent storage for pods.
   Once connected to a pod, they are also tied to the pod's identity.
@@ -90,20 +91,20 @@
   Routing of network traffic must be taken care of by creating a headless \gls{service}~\cite{kubernetesdoc}.
   Stateful services using \texttt{PersistentVolumes} rely on the availability and fault-tolerance of the volumes provided by the underlying infrastructure, such as a \gls{paas} solutions.
 
-  \textit{Daemons} are application components that should run only once on all or selected nodes of the cluster, such as cluster storage, node monitoring, or a log collection component.
+  \textbf{Daemons} are application components that should run only once on all or selected nodes of the cluster, such as cluster storage, node monitoring, or a log collection component.
   Daemons can be defined via \texttt{DaemonSet}s.
   They ensure that a copy of the daemon runs on all the selected nodes.
   If a node with a daemon fails, no action is taken, as the desired state is still met, just with a reduced number of nodes.
   If a new node is added back to the cluster, the \texttt{DaemonSet} controller takes care of scheduling the creation of a new copy of the daemon on the newly added node.
   Recovering failed nodes is not part of \gls{kubernetes}.
 
-  \textit{Jobs} run only once.
+  \textbf{Jobs} run only once.
   They can be defined using a \texttt{Job}.
   The job \gls{pod controller} ensures that the job is run to completion.
   This means if the job consists of one pod, this pod must terminate successfully, otherwise it will be restarted.
   Jobs can be started with a degree of parallelism.
   In this case, the user can either specify a number of completions that must succeed or the controller waits for the first pod to successfully terminate.
-  If those conditions are not yet met, the controller will recover failed pods.
+  If those conditions are not yet met, the controller will recover the failed pods.
 
 \subsection{Survivable}\label{sec:self-healing-kubernetes:survivable}
   Survivable systems maintain the essential services of the managed application in the case of failure and resource pressure, while non-essential services may experience disruptions and are recovered after the failure has been dealt with.
@@ -114,11 +115,11 @@
   The user can assign them to pods.
   Pod priority will affect the scheduling order:
   Higher priority pods will be scheduled first.
-  In addition, under resource pressure higher priority pods in the scheduler queue will lead to the eviction of lower priority pods.
+  In addition, under resource pressure, higher priority pods in the scheduler queue will lead to the eviction of lower priority pods.
   This is called preemption.
   If the user assigns high priority \glspl{priority class} to the essential services, the scheduler will do its best to maintain all instances of the essential services.
   In the case of failures, it will even evict lower priority pods to make room for the essential services if necessary.
 
-  To prevent the scheduler to evict all instances of a lower priority service, the user can specify \glspl{pdb}.
+  To prevent the scheduler from evicting all instances of a lower priority service, the user can specify \glspl{pdb}.
   They limit the number of replicated pods that are down due to voluntary disruptions, such as draining or preemption.
   Unfortunately, the scheduler only considers \glspl{pdb} on best effort basis during preemption, which limits the applicability of \glspl{pdb} for self-healing.

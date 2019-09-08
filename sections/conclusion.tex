@@ -3,11 +3,11 @@
 % !TeX spellcheck = en_US
 
 \section{Conclusion}\label{sec:conclusion}
-  In this work, we showed how \gls{kubernetes} can be used to equip a microservice application with self-healing capabilities.
-  \Gls{kubernetes} monitors the cluster state and takes corrective actions to let the cluster converge to the user-defined, desired state.
+  In this work we showed how \gls{kubernetes} can be used to equip a microservice application with self-healing capabilities.
+  \Gls{kubernetes} monitors the cluster state and takes corrective actions to let the cluster converge to the user-defined desired state.
   \Gls{kubernetes} implements fault-tolerance through the replication and isolation of application parts encapsulated in pods and load balancing the network accesses to the pods using \glspl{service}.
-  On pod failures, other replicas can simply take over the failed node's work.
-  After the failure, the cluster converges back to the desired state.
+  On pod failures, other replicas can simply take over the failed node's tasks.
+  After the failures have been dealt with, the cluster converges back to the desired state.
   \Glspl{pod controller} detect pod or node failures, diagnose them, and recover the failed pods by terminating the failed pod and scheduling a new identical one.
   This reflects the self-stabilizing aspect of self-healing systems.
   \Glspl{priority class} and \glspl{pdb} help the \gls{kubernetes} scheduler on resource pressure and occurring failures to maintain the essential services, while recovering the non-essential services when enough resources are available again.
