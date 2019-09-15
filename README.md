@@ -1,4 +1,19 @@
-# Self-Healing Microservices with Kubernetes (Paper) [![Build Status](https://travis-ci.com/CodeLionX/selfhealing-k8s-paper.svg?token=pqFUU2qudhkNenBcNwxf&branch=master)](https://travis-ci.com/CodeLionX/selfhealing-k8s-paper)
+# Self-Healing Microservices with Kubernetes (unpublished Paper) [![Build Status](https://travis-ci.com/CodeLionX/selfhealing-k8s-paper.svg?token=pqFUU2qudhkNenBcNwxf&branch=master)](https://travis-ci.com/CodeLionX/selfhealing-k8s-paper)
+
+**The PDF version of this paper is included in this repository. You can download it from [`Self-Healing.pdf`](https://github.com/CodeLionX/selfhealing-k8s-paper/raw/master/Self-Healing.pdf).**
+
+## Abstract
+
+One essential part of a self-adaptive system is its self-healing capabilities.
+Self-healing systems monitor the running application and try to keep the system in a healthy state to increase availability and adapt to unexpected changes.
+Therefore, they have to be fault tolerant, mask temporary failures, maintain essential services, and recover from the failures in a finite amount of time to reach the healthy system state again.
+In cloud environments, self-healing techniques are already used in form of tools that try to achieve continuous availability for cloud services.
+
+In this paper, we take a look at the self-healing capabilities of Kubernetes for microservice architectures in the cloud and compare it to the approaches in self-healing literature.
+We find that Kubernetes' approach is a form of architecture-based self-healing and that Kubernetes implements all important aspects of self-healing systems.
+However, Kubernetes depends on the underlying infrastructure to provide fault-tolerant persistent volumes, must run in an highly available setup to be itself resilient in case of Kubernetes master component failures.
+
+## Repository Contents
 
 The main file is called `paper.tex`.
 It contains the preamble and document setup stuff.
