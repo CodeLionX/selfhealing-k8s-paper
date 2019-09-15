@@ -11,7 +11,7 @@ In cloud environments, self-healing techniques are already used in form of tools
 
 In this paper, we take a look at the self-healing capabilities of Kubernetes for microservice architectures in the cloud and compare it to the approaches in self-healing literature.
 We find that Kubernetes' approach is a form of architecture-based self-healing and that Kubernetes implements all important aspects of self-healing systems.
-However, Kubernetes depends on the underlying infrastructure to provide fault-tolerant persistent volumes, must run in an highly available setup to be itself resilient in case of Kubernetes master component failures.
+However, Kubernetes depends on the underlying infrastructure to provide fault-tolerant persistent volumes and must run in an highly available setup to be itself resilient in case of Kubernetes master component failures.
 
 ## Repository Contents
 
